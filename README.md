@@ -1,8 +1,6 @@
 # FNSR-Project Description
 (Frans Nyberg, Salim Rabat)
 
-Simplicity is a key concern in our project, rather than looking like much to the world.
+The main purpose is to design a very simple yet appealing game. Our idea is to develop a one-player rhythm game. Despite the genre being called rhythm, we realize that music is an optional layer of complexity and it depends how much we manage to get done in time. Our MVP consists of randomly generated inputs, a feedback singal for each correct hit and an ending after either some set amount of time or number of misses, demonstrated by this rather quickly drawn [MVP image](https://github.com/salimrabat/FNSR-Project/wiki/Timing-Game-MVP).
 
-We intend to develop a Dodger Survival game. Our Minimal Viable Product only includes geometric shapes and their movements, and of course gettting hit results in game over. This shy MVP may look like [this](https://github.com/salimrabat/FNSR-Project/wiki/Dodger-Game-Images). Within our MVP is a successive increase in difficulty, such as faster falling objects or more objects. Otherwise it would be an eternal game.
-
-In case there will be time to expand on our game, which I hope there will, current ideas are implementation of background music and colours. These new elements could then further allow for colour-coded blocks such as safe-zones and a rhythmic gameplay, perhaps incorporated with colourfulness. But we intend to be "satisfied" if we only finish our MVP.
+Expanding beyond this MVP, our initial ideas are to have different difficulty levels of choice, possibly more input buttons in case the game becomes too easy, and of course open-source music and graphics.
