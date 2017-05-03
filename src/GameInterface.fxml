@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<Pane prefHeight="600.0" prefWidth="550.0"
+      xmlns="http://javafx.com/javafx/8"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="GameInterface">
+
+   <children>
+      <ImageView fitHeight="600.0" fitWidth="550.0">
+         <image>
+            <Image url="@background.jpg" />
+         </image>
+      </ImageView>
+       <GridPane alignment="BOTTOM_CENTER" hgap="10" layoutX="213.0" layoutY="180.0" vgap="10">
+           <padding><Insets bottom="10" left="25" right="25" top="25" /></padding>
+           <children>
+               <Text text="Welcome" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="0" />
+               <HBox alignment="bottom_right" spacing="10" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                  <children>
+                      <Button onAction="#handleSubmitButtonAction" text="Play" />
+                  </children>
+               </HBox>
+
+               <Text fx:id="actiontarget" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+           </children>
+       </GridPane>
+   </children>
+</Pane>
