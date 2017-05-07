@@ -15,4 +15,4 @@ Any possible further options are planned to be implemented within the user inter
 
 ## Frameworks
 
-A simple suggestion for game framework is JavaFX. For testing, another simple suggestion is to use the test framework TestFX, which seems to accompany JavaFX well.
+We're using the LibGDX game engine, which uses the LWJGL.
