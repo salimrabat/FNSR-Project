@@ -6,9 +6,9 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class UnnamedGame extends Game {
+
 	SpriteBatch batch;
 	BitmapFont font;
-
 
 	/**
 	 * Called when the {@link Application} is first created.

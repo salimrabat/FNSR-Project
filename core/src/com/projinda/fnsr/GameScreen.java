@@ -2,6 +2,7 @@ package com.projinda.fnsr;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -17,14 +18,25 @@ import com.badlogic.gdx.utils.Array;
 public class GameScreen implements Screen {
 
     final UnnamedGame game;
-    Texture noteImage;
     OrthographicCamera camera;
     Rectangle note;
     Array<Rectangle> notes;
 
+    /**
+     * Images (graphical objects)
+     */
+    // Falling object
+    Texture noteImage;
+    // Goal marker
+    Texture noteContourImage;
 
     public GameScreen(UnnamedGame game) {
         this.game = game;
+
+        // initialize objects in game
+        initCamera();
+        initImages();
+
         // TODO
     }
 
@@ -91,4 +103,21 @@ public class GameScreen implements Screen {
         // TODO
     }
 
+    /**
+     * Camera settings when starting game screen
+     */
+    private void initCamera() {
+        camera = new OrthographicCamera();
+        // camera centered at Gdx.graphics.getWidth()/2
+        // and ..getHeight()/2
+        camera.setToOrtho(true);
+    }
+
+    private void initImages() {
+        noteContourImage = new Texture(Gdx.files.internal("noteContour.png"));
+        // represent contours by one canvas (a rectangle)
+        Rectangle noteContour = new Rectangle();
+        noteContour.x = Gdx.graphics.getWidth();
+        noteContour.y = Gdx.graphics.getHeight();
+    }
 }
