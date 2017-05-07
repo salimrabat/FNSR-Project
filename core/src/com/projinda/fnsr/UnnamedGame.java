@@ -19,7 +19,7 @@ public class UnnamedGame extends Game {
 
 		font = new BitmapFont();
 
-		this.setScreen(new MainMenuScreen(this));
+		this.setScreen(new GameScreen(this));
 	}
 
 	public void render() {

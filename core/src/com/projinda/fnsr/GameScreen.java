@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
@@ -22,13 +23,15 @@ public class GameScreen implements Screen {
     Rectangle note;
     Array<Rectangle> notes;
 
-    /**
-     * Images (graphical objects)
-     */
-    // Falling object
+    /** Falling object */
     Texture noteImage;
-    // Goal marker
+    /** The goal of the falling objects. Player should click when object reaches this goal. */
     Texture noteContourImage;
+    /** Store the goals */
+    Rectangle[] noteContourImages;
+
+    /** Number of columns where beats fall **/
+    private final int Columns = 3;
 
     public GameScreen(UnnamedGame game) {
         this.game = game;
@@ -58,6 +61,14 @@ public class GameScreen implements Screen {
      */
     @Override
     public void render(float delta) {
+
+        // Background and (our stationary) camera
+        renderScreen();
+
+        game.batch.begin();
+        drawGoals();
+        game.batch.end();
+
         // TODO
     }
 
@@ -108,16 +119,61 @@ public class GameScreen implements Screen {
      */
     private void initCamera() {
         camera = new OrthographicCamera();
-        // camera centered at Gdx.graphics.getWidth()/2
-        // and ..getHeight()/2
-        camera.setToOrtho(true);
+        camera.setToOrtho(true, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
+    /**
+     * Image settings when starting game screen
+     */
     private void initImages() {
+
+        int canvasWidth = Gdx.graphics.getWidth();
+        int canvasHeight = Gdx.graphics.getHeight();
+
+        // Contours
         noteContourImage = new Texture(Gdx.files.internal("noteContour.png"));
-        // represent contours by one canvas (a rectangle)
-        Rectangle noteContour = new Rectangle();
-        noteContour.x = Gdx.graphics.getWidth();
-        noteContour.y = Gdx.graphics.getHeight();
+        noteContourImages = new Rectangle[Columns];
+        // Place each in separate rectangles
+        for (int i = 0; i < Columns; i++) {
+            Rectangle noteContour = new Rectangle();
+            noteContour.x = canvasWidth / 2 * i;
+            noteContour.y = 20;
+            // In case we switch image, make it all of canvas size
+            noteContour.width = canvasWidth;
+            noteContour.height = canvasHeight;
+            noteContourImages[i] = noteContour;
+        }
+    }
+
+    /**
+     * Render screen info. It's good practice apparently to update camera once per frame.
+     */
+    private void renderScreen() {
+        // clear the screen with a dark blue color. The
+        // arguments to glClearColor are the red, green
+        // blue and alpha component in the range [0,1]
+        // of the color to be used to clear the screen.
+        Gdx.gl.glClearColor(0.2f, 0.2f, 0.5f, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        // tell the camera to update its matrices.
+        camera.update();
+
+        // tell the SpriteBatch to render in the
+        // coordinate system specified by the camera.
+        game.batch.setProjectionMatrix(camera.combined);
+    }
+
+    /**
+     * Display goals where player should click when falling object reaches
+     */
+    private void drawGoals() {
+        for (Rectangle contour : noteContourImages) {
+            float xpos = contour.x;
+            float ypos = contour.y;
+            float wei = contour.width;
+            float hei = contour.height;
+            game.batch.draw(noteContourImage, xpos, ypos, wei, hei);
+        }
     }
 }
