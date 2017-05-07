@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.utils.Array;
 
 /**
  * Created by Salim Rabat and Frans Nyberg on 07/05/2017.
@@ -18,22 +17,22 @@ import com.badlogic.gdx.utils.Array;
  */
 public class GameScreen implements Screen {
 
-    final UnnamedGame game;
-    OrthographicCamera camera;
-    Rectangle note;
-    Array<Rectangle> notes;
+    private final UnnamedGame game;
+    private OrthographicCamera camera;
+    //private Rectangle note;
+    //private Array<Rectangle> notes;
 
-    /** Falling object */
-    Texture noteImage;
-    /** The goal of the falling objects. Player should click when object reaches this goal. */
-    Texture noteContourImage;
-    /** Store the goals */
-    Rectangle[] noteContourImages;
+    // Falling object
+    //private Texture noteImage;
+    // The goal of the falling objects. Player should click when object reaches this goal
+    private Texture noteContourImage;
+    // Store the goals
+    private Rectangle[] noteContourImages;
 
-    /** Number of columns where beats fall **/
-    private final int Columns = 3;
+    // Number of columns where beats fall
+    private final int Columns = 4;
 
-    public GameScreen(UnnamedGame game) {
+    GameScreen(UnnamedGame game) {
         this.game = game;
 
         // initialize objects in game
@@ -43,9 +42,9 @@ public class GameScreen implements Screen {
         // TODO
     }
 
-    private void spawnNotes() {
+    //private void spawnNotes() {
         // TODO
-    }
+    //}
     /**
      * Called when this screen becomes the current screen for a {@link Game}.
      */
@@ -73,8 +72,8 @@ public class GameScreen implements Screen {
     }
 
     /**
-     * @param width
-     * @param height
+     * @param width int
+     * @param height int
      * @see ApplicationListener#resize(int, int)
      */
     @Override
@@ -119,7 +118,7 @@ public class GameScreen implements Screen {
      */
     private void initCamera() {
         camera = new OrthographicCamera();
-        camera.setToOrtho(true, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
 
     /**
@@ -127,20 +126,17 @@ public class GameScreen implements Screen {
      */
     private void initImages() {
 
-        int canvasWidth = Gdx.graphics.getWidth();
-        int canvasHeight = Gdx.graphics.getHeight();
-
         // Contours
         noteContourImage = new Texture(Gdx.files.internal("noteContour.png"));
         noteContourImages = new Rectangle[Columns];
         // Place each in separate rectangles
         for (int i = 0; i < Columns; i++) {
             Rectangle noteContour = new Rectangle();
-            noteContour.x = canvasWidth / 2 * i;
+            noteContour.x = Gdx.graphics.getWidth() / (Columns+1) * (i + 1);
             noteContour.y = 20;
-            // In case we switch image, make it all of canvas size
-            noteContour.width = canvasWidth;
-            noteContour.height = canvasHeight;
+            // Hardcoded, unfortunately
+            noteContour.width = 48;
+            noteContour.height = 48;
             noteContourImages[i] = noteContour;
         }
     }
