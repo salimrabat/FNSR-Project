@@ -1,13 +1,15 @@
 package com.projinda.fnsr;
 
-import com.badlogic.gdx.ApplicationListener;
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.TimeUtils;
+
+import java.util.Iterator;
 
 /**
  * Created by Salim Rabat and Frans Nyberg on 07/05/2017.
@@ -19,18 +21,20 @@ public class GameScreen implements Screen {
 
     private final UnnamedGame game;
     private OrthographicCamera camera;
-    //private Rectangle note;
-    //private Array<Rectangle> notes;
+    private Rectangle note;
+    private Array<Rectangle> notes;
 
     // Falling object
-    //private Texture noteImage;
+    private Texture noteImage;
     // The goal of the falling objects. Player should click when object reaches this goal
     private Texture noteContourImage;
     // Store the goals
     private Rectangle[] noteContourImages;
 
     // Number of columns where beats fall
-    private final int Columns = 4;
+    private final int COLUMNS = 4;
+    private long lastSpawnTime;
+    private int score;
 
     GameScreen(UnnamedGame game) {
         this.game = game;
@@ -40,11 +44,33 @@ public class GameScreen implements Screen {
         initImages();
 
         // TODO
+        notes = new Array<Rectangle>(COLUMNS);
+//        for (int i = 0; i < COLUMNS; i++) {
+//            note = new Rectangle();
+//            note.x = Gdx.graphics.getWidth() / (COLUMNS + 1) * (i + 1);
+//            note.y = Gdx.graphics.getHeight();
+//            note.width = 48;
+//            note.height = 48;
+//            notes.add(note);
+//            lastSpawnTime = TimeUtils.nanoTime();
+//        }
+        spawnNotes();
+        score = 0;
     }
 
-    //private void spawnNotes() {
+    private void spawnNotes() {
         // TODO
-    //}
+        int i = MathUtils.random(3);
+        note = new Rectangle();
+        note.x = noteContourImages[i].x;
+        note.y = Gdx.graphics.getHeight();
+        note.width = 48;
+        note.height = 48;
+        notes.add(note);
+        lastSpawnTime = TimeUtils.nanoTime();
+    }
+
+
     /**
      * Called when this screen becomes the current screen for a {@link Game}.
      */
@@ -63,10 +89,46 @@ public class GameScreen implements Screen {
 
         // Background and (our stationary) camera
         renderScreen();
+        noteImage = new Texture(Gdx.files.internal("note.png"));
 
         game.batch.begin();
+        game.font.draw(game.batch, "Drops Collected: " + score, 0, Gdx.graphics.getHeight() - 30);
         drawGoals();
+        for (Rectangle note : notes) {
+            game.batch.draw(noteImage, note.x, note.y);
+        }
         game.batch.end();
+
+        // check if we need to create a new note
+        if (TimeUtils.nanoTime() - lastSpawnTime > 1000000000) {
+            spawnNotes();
+        }
+
+        // make the notes fall, remove any that are beneath the bottom edge of
+        // the screen or are pressed.
+        Iterator<Rectangle> iter = notes.iterator();
+        while (iter.hasNext()) {
+            Rectangle note = iter.next();
+            note.y -= 200 * Gdx.graphics.getDeltaTime();
+            if (note.y + 48 < 0)
+                iter.remove();
+            if (note.overlaps(noteContourImages[0]) && Gdx.input.isKeyPressed(Input.Keys.A)) {
+                score++;
+                iter.remove();
+            }
+            if (note.overlaps(noteContourImages[1]) && Gdx.input.isKeyPressed(Input.Keys.S)) {
+                score++;
+                iter.remove();
+            }
+            if (note.overlaps(noteContourImages[2]) && Gdx.input.isKeyPressed(Input.Keys.D)) {
+                score++;
+                iter.remove();
+            }
+            if (note.overlaps(noteContourImages[3]) && Gdx.input.isKeyPressed(Input.Keys.F)) {
+                score++;
+                iter.remove();
+            }
+        }
 
         // TODO
     }
@@ -128,11 +190,11 @@ public class GameScreen implements Screen {
 
         // Contours
         noteContourImage = new Texture(Gdx.files.internal("noteContour.png"));
-        noteContourImages = new Rectangle[Columns];
+        noteContourImages = new Rectangle[COLUMNS];
         // Place each in separate rectangles
-        for (int i = 0; i < Columns; i++) {
+        for (int i = 0; i < COLUMNS; i++) {
             Rectangle noteContour = new Rectangle();
-            noteContour.x = Gdx.graphics.getWidth() / (Columns+1) * (i + 1);
+            noteContour.x = Gdx.graphics.getWidth() / (COLUMNS +1) * (i + 1);
             noteContour.y = 20;
             // Hardcoded, unfortunately
             noteContour.width = 48;
