@@ -2,16 +2,8 @@ package com.projinda.fnsr;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 /**
  * Created by Salim Rabat and Frans Nyberg on 07/05/2017.
@@ -22,31 +14,13 @@ public class MainMenuScreen implements Screen {
 
     final UnnamedGame game;
     OrthographicCamera camera;
-    Stage stage;
 
 
-    public MainMenuScreen(final UnnamedGame game) {
+    public MainMenuScreen(UnnamedGame game) {
         this.game = game;
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 600, 800);
 
-
-        stage = new Stage(new ScreenViewport());
-        Skin mySkin = new Skin(Gdx.files.internal("skin/glassy-ui.json"));
-        Button easy = new TextButton("Easy Mode", mySkin, "small");
-        easy.setPosition(800/2, 480/2);
-        easy.addListener(new InputListener(){
-            @Override
-            public void touchUp (InputEvent event, float x, float y, int pointer, int button) {
-                game.setScreen(new GameScreen(game));
-            }
-            @Override
-            public boolean touchDown (InputEvent event, float x, float y, int pointer, int button) {
-                //game.setScreen(new GameScreen(game));
-                return true;
-            }
-        });
-        stage.addActor(easy);
 
     }
     /**
@@ -54,7 +28,7 @@ public class MainMenuScreen implements Screen {
      */
     @Override
     public void show() {
-        Gdx.input.setInputProcessor(stage);
+        //no need to implement
     }
 
     /**

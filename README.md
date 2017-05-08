@@ -1,8 +1,18 @@
 # FNSR-Project Description
 (Frans Nyberg, Salim Rabat)
 
-Simplicity is a key concern in our project, rather than looking like much to the world.
+## What we are making
 
-We intend to develop a Dodger Survival game. Our Minimal Viable Product only includes geometric shapes and their movements, and of course gettting hit results in game over. This shy MVP may look like [this](https://github.com/salimrabat/FNSR-Project/wiki/Dodger-Game-Images). Within our MVP is a successive increase in difficulty, such as faster falling objects or more objects. Otherwise it would be an eternal game.
+The main purpose is to design a very simple yet somewhat appealing game. Our idea is to develop a one-player rhythm game. Despite the genre being called rhythm, we realize that music is an optional layer of complexity and it depends how much we manage to get done in time. Our MVP consists of randomly generated inputs, a feedback signal for each correct hit and an ending after either some set amount of time or number of misses, demonstrated by this rather quickly drawn [MVP image](https://github.com/salimrabat/FNSR-Project/wiki/Timing-Game-MVP).
 
-In case there will be time to expand on our game, which I hope there will, current ideas are implementation of background music and colours. These new elements could then further allow for colour-coded blocks such as safe-zones and a rhythmic gameplay, perhaps incorporated with colourfulness. But we intend to be "satisfied" if we only finish our MVP.
+Expanding beyond this MVP, our initial ideas are to have different difficulty levels of choice, possibly more input buttons in case the game becomes too easy, and of course open-source music and graphics.
+
+## How to play
+
+The plan is simply to include all relevant files in its own downloadable repository, launch the game from an executable file and play the game in its own window.
+
+Any possible further options are planned to be implemented within the user interface of the game itself and not by just changing files manually. However, as an exception, if the project is expanded to include integration with music of your own choice, it may be possible to add your own music in a folder dedicated to only music.
+
+## Frameworks
+
+We're using the LibGDX game engine, which uses the LWJGL.
