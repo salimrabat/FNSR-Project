@@ -11,7 +11,7 @@ import java.awt.*;
  * One column of falling beats which corresponds to one give keyboard key.
  *
  * @author FN
- * @version 10 may 2017
+ * @version 0.1
  */
 public class Column {
 
@@ -20,7 +20,7 @@ public class Column {
     // Part of game screen for this column
     private Rectangle columnRec;
     // Keyboard key
-    private Input.Keys clickKey;
+    private int clickKey;
     // Area for beats to reach before player should click
     private Rectangle targetRec;
 
@@ -36,7 +36,7 @@ public class Column {
      * @param columnArea Rectangle representing the area which this column covers.
      * @param key keyboard button to press for target.
      */
-    public Column(RandomRhythm gameScreen, Rectangle columnArea, Input.Keys key) {
+    public Column(RandomRhythm gameScreen, Rectangle columnArea, int key) {
         game = gameScreen;
         columnRec = columnArea;
         clickKey = key;
@@ -56,5 +56,9 @@ public class Column {
         float yPos = columnRec.y + 20;
 
         game.batch.draw(noteC, xPos, yPos, sizeNoteCImage.x, sizeNoteCImage.y);
+    }
+
+    public void dispose() {
+        noteC.dispose();
     }
 }
