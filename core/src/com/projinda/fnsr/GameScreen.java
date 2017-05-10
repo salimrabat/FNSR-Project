@@ -43,7 +43,6 @@ public class GameScreen implements Screen {
         initCamera();
         initImages();
 
-        // TODO
         notes = new Array<Rectangle>(COLUMNS);
 //        for (int i = 0; i < COLUMNS; i++) {
 //            note = new Rectangle();
@@ -59,7 +58,6 @@ public class GameScreen implements Screen {
     }
 
     private void spawnNotes() {
-        // TODO
         int i = MathUtils.random(3);
         note = new Rectangle();
         note.x = noteContourImages[i].x;
@@ -76,7 +74,6 @@ public class GameScreen implements Screen {
      */
     @Override
     public void show() {
-        // TODO
     }
 
     /**
@@ -130,7 +127,6 @@ public class GameScreen implements Screen {
             }
         }
 
-        // TODO
     }
 
     /**
@@ -172,7 +168,10 @@ public class GameScreen implements Screen {
      */
     @Override
     public void dispose() {
-        // TODO
+        // images
+        noteImage.dispose();
+        noteContourImage.dispose();
+        game.dispose();
     }
 
     /**
