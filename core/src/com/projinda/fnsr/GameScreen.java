@@ -19,7 +19,7 @@ import java.util.Iterator;
  */
 public class GameScreen implements Screen {
 
-    private final UnnamedGame game;
+    private final RandomRhythm game;
     private OrthographicCamera camera;
     private Rectangle note;
     private Array<Rectangle> notes;
@@ -36,7 +36,7 @@ public class GameScreen implements Screen {
     private long lastSpawnTime;
     private int score;
 
-    GameScreen(UnnamedGame game) {
+    GameScreen(RandomRhythm game) {
         this.game = game;
 
         // initialize objects in game
