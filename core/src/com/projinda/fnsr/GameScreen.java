@@ -63,7 +63,7 @@ public class GameScreen implements Screen {
     private void spawnNotes() {
         int i = MathUtils.random(3);
         note = new Rectangle();
-        note.x = colAreas[i].x;
+        note.x = colAreas[i].x + colAreas[i].width / 2;
         note.y = Gdx.graphics.getHeight();
         note.width = 48;
         note.height = 48;
@@ -71,7 +71,6 @@ public class GameScreen implements Screen {
         // start time ticker
         lastSpawnTime = TimeUtils.nanoTime();
     }
-
 
     /**
      * Called when this screen becomes the current screen for a {@link Game}.
@@ -113,19 +112,19 @@ public class GameScreen implements Screen {
             note.y -= 200 * Gdx.graphics.getDeltaTime();
             if (note.y + 48 < 0)
                 iter.remove();
-            if (note.overlaps(colAreas[0]) && Gdx.input.isKeyPressed(Input.Keys.A)) {
+            if (note.overlaps(columns[0].getTargetRec()) && Gdx.input.isKeyPressed(Input.Keys.A)) {
                 score++;
                 iter.remove();
             }
-            if (note.overlaps(colAreas[1]) && Gdx.input.isKeyPressed(Input.Keys.S)) {
+            if (note.overlaps(columns[1].getTargetRec()) && Gdx.input.isKeyPressed(Input.Keys.S)) {
                 score++;
                 iter.remove();
             }
-            if (note.overlaps(colAreas[2]) && Gdx.input.isKeyPressed(Input.Keys.D)) {
+            if (note.overlaps(columns[2].getTargetRec()) && Gdx.input.isKeyPressed(Input.Keys.D)) {
                 score++;
                 iter.remove();
             }
-            if (note.overlaps(colAreas[3]) && Gdx.input.isKeyPressed(Input.Keys.F)) {
+            if (note.overlaps(columns[3].getTargetRec()) && Gdx.input.isKeyPressed(Input.Keys.F)) {
                 score++;
                 iter.remove();
             }
