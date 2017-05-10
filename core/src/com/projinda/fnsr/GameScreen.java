@@ -12,10 +12,13 @@ import com.badlogic.gdx.utils.TimeUtils;
 import java.util.Iterator;
 
 /**
- * Created by Salim Rabat and Frans Nyberg on 07/05/2017.
  * This class represents the logic of the game.
  * note.png is an image that has the shape of a musical note, these note will fall down at different times
  * and different speeds. We might have some music playing in the background.
+ *
+ * @author SR
+ * @author FN
+ * @version 10 may 2017
  */
 public class GameScreen implements Screen {
 
@@ -207,7 +210,7 @@ public class GameScreen implements Screen {
      * Render screen info. It's good practice apparently to update camera once per frame.
      */
     private void renderScreen() {
-        // clear the screen with a dark blue color. The
+        // clear the screen with a different color. The
         // arguments to glClearColor are the red, green
         // blue and alpha component in the range [0,1]
         // of the color to be used to clear the screen.
