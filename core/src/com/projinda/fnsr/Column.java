@@ -3,8 +3,8 @@ package com.projinda.fnsr;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
-
 import java.awt.*;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
@@ -15,7 +15,7 @@ import java.util.LinkedList;
  */
 class Column {
 
-    // Game screen
+    // Game
     private RandomRhythm game;
     // Part of game screen for this column
     private Rectangle columnRec;
@@ -25,17 +25,25 @@ class Column {
     private Rectangle targetRec;
 
     // Target coordinates
-    float TXPos;
-    float TYPos;
+    private float TXPos;
+    private float TYPos;
 
-    // Beats stored at
-    LinkedList<Rectangle> beats;
+    // Store beats
+    // Use Linked List since beats are often added or removed
+    // and stepped through from start from finish without order
+    private LinkedList<Rectangle> beats;
+    // Handle beats one-by-one
+    private Iterator<Rectangle> beatIterator;
 
     // Images
+    // Note
+    private Texture noteImage;
+    // size of note image
+    private Point sizeNoteImage;
     // Note contour
-    Texture noteC;
+    private Texture noteCImage;
     // size of note contour image
-    Point sizeNoteCImage;
+    private Point sizeNoteCImage;
 
     /**
      * Constructor for Column to call from some Screen instance.
@@ -56,8 +64,9 @@ class Column {
         beats = new LinkedList<Rectangle>();
 
         // Images
-        noteC = new Texture(Gdx.files.internal("noteContour.png"));
-        // size of image
+        noteImage = new Texture(Gdx.files.internal("note.png"));
+        sizeNoteImage = new Point(48,48);
+        noteCImage = new Texture(Gdx.files.internal("noteContour.png"));
         sizeNoteCImage = new Point(48, 48);
         // target area
         targetRec = new Rectangle(TXPos, TYPos, sizeNoteCImage.x, sizeNoteCImage.y);
@@ -67,31 +76,82 @@ class Column {
      * Draw the boundaries of the target for beats.
      */
     void drawTarget() {
-
-        game.batch.draw(noteC, TXPos, TYPos, sizeNoteCImage.x, sizeNoteCImage.y);
+        game.batch.draw(noteCImage, TXPos, TYPos, sizeNoteCImage.x, sizeNoteCImage.y);
     }
 
     /**
-     * Get the area in which the target is active at.
-     * @return Area of target.
-     */
-    Rectangle getTargetRec() { return targetRec; }
-
-    /**
-     * Draw a beat where it will start falling.
+     * Initiate a beat where it will start falling.
      */
     void spawnBeat() {
         // Contain a beat within a rectangle
         Rectangle note = new Rectangle();
         // Line up with target
         note.x = TXPos;
-        note.y = Gdx.graphics.getHeight();
-        note.width = 48;
-        note.height = 48;
+        // Spawn at the top
+        note.y = columnRec.y + columnRec.height - sizeNoteImage.y;
+        // Same size as image
+        note.width = sizeNoteImage.x;
+        note.height = sizeNoteImage.y;
         beats.add(note);
     }
 
+    /**
+     * Draw all beats in column.
+     */
+    void drawBeats() {
+        for (Rectangle beat : beats) {
+            game.batch.draw(noteImage, beat.x, beat.y);
+        }
+    }
+
+    /**
+     * Animate all beats falling by moving a constant distance down.
+     */
+    void fall() {
+        for (Rectangle beat : beats) {
+            // 200 pixels per second
+            beat.y -= 200 * Gdx.graphics.getDeltaTime();
+        }
+    }
+
+    /**
+     * Handle input from player.
+     * @return change in score.
+     */
+    int checkInput() {
+        int scoreChange = 0;
+        beatIterator = beats.iterator();
+        while (beatIterator.hasNext()) {
+            // next beat
+            Rectangle beat = beatIterator.next();
+            if (Gdx.input.isKeyJustPressed(clickKey)) {
+                if (beat.overlaps(targetRec)) {
+                    beatIterator.remove();
+                    scoreChange++;
+                }
+                else {
+                    // player inputs when beat is not within target range
+                    scoreChange--;
+                }
+            }
+        }
+        return scoreChange;
+    }
+
+    /**
+     * Removes beats if they fall outside the visible screen.
+     */
+    void checkEndOfScreen() {
+        System.out.printf("%s\n", beats.size());
+        beatIterator = beats.iterator();
+        while (beatIterator.hasNext()) {
+            // next beat
+            if (beatIterator.next().y < -sizeNoteImage.y) beatIterator.remove();
+        }
+    }
+
     void dispose() {
-        noteC.dispose();
+        noteCImage.dispose();
+        noteImage.dispose();
     }
 }

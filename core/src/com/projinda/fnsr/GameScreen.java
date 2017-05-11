@@ -6,11 +6,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
-
-import java.util.Iterator;
-import java.util.LinkedList;
 
 /**
  * This class represents the logic of the game.
@@ -25,9 +21,7 @@ public class GameScreen implements Screen {
 
     private final RandomRhythm game;
     private OrthographicCamera camera;
-    // Store beats
-    // Linked list used since adding and deleting are common
-    private LinkedList<Rectangle> notes;
+
 
     // Falling object
     private Texture noteImage;
@@ -90,15 +84,14 @@ public class GameScreen implements Screen {
         renderScreen();
         noteImage = new Texture(Gdx.files.internal("note.png"));
 
+        // Handle batch for this game, which is every "saved thing" in the game.
         game.batch.begin();
         // Score
         game.font.draw(game.batch, "Score: " + score, 0, Gdx.graphics.getHeight() - 30);
         // Targets
         drawTargets();
         // Beats
-        for (Rectangle note : notes) {
-            game.batch.draw(noteImage, note.x, note.y);
-        }
+        for (Column col : columns) col.drawBeats();
         game.batch.end();
 
         // check if we need to create a new note
@@ -108,29 +101,10 @@ public class GameScreen implements Screen {
 
         // make the notes fall, remove any that are beneath the bottom edge of
         // the screen or are pressed.
-        Iterator<Rectangle> iter = notes.iterator();
-        while (iter.hasNext()) {
-            Rectangle note = iter.next();
-            note.y -= 200 * Gdx.graphics.getDeltaTime();
-            if (note.y + 48 < 0)
-                iter.remove();
-            if (note.overlaps(columns[0].getTargetRec()) && Gdx.input.isKeyPressed(Input.Keys.A)) {
-                score++;
-                iter.remove();
-            }
-            if (note.overlaps(columns[1].getTargetRec()) && Gdx.input.isKeyPressed(Input.Keys.S)) {
-                score++;
-                iter.remove();
-            }
-            if (note.overlaps(columns[2].getTargetRec()) && Gdx.input.isKeyPressed(Input.Keys.D)) {
-                score++;
-                iter.remove();
-            }
-            if (note.overlaps(columns[3].getTargetRec()) && Gdx.input.isKeyPressed(Input.Keys.F)) {
-                score++;
-                iter.remove();
-            }
-            // Note, removing beat if it reaches end of screen is done automatically
+        for (Column col : columns) {
+            col.fall();
+            score += col.checkInput();
+            col.checkEndOfScreen();
         }
 
     }
