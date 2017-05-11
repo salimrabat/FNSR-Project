@@ -5,12 +5,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Rectangle;
 
 import java.awt.*;
+import java.util.LinkedList;
 
 /**
- * One column of falling beats which corresponds to one give keyboard key.
+ * One column of falling beats and a target which corresponds to one given keyboard key.
  *
  * @author FN
- * @version 0.1
+ * @version 0.2
  */
 class Column {
 
@@ -26,6 +27,9 @@ class Column {
     // Target coordinates
     float TXPos;
     float TYPos;
+
+    // Beats stored at
+    LinkedList<Rectangle> beats;
 
     // Images
     // Note contour
@@ -49,6 +53,8 @@ class Column {
         // Position above lower boundary
         TYPos = 20;
 
+        beats = new LinkedList<Rectangle>();
+
         // Images
         noteC = new Texture(Gdx.files.internal("noteContour.png"));
         // size of image
@@ -70,6 +76,20 @@ class Column {
      * @return Area of target.
      */
     Rectangle getTargetRec() { return targetRec; }
+
+    /**
+     * Draw a beat where it will start falling.
+     */
+    void spawnBeat() {
+        // Contain a beat within a rectangle
+        Rectangle note = new Rectangle();
+        // Line up with target
+        note.x = TXPos;
+        note.y = Gdx.graphics.getHeight();
+        note.width = 48;
+        note.height = 48;
+        beats.add(note);
+    }
 
     void dispose() {
         noteC.dispose();

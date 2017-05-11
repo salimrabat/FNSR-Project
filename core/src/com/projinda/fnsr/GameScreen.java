@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 
 /**
  * This class represents the logic of the game.
@@ -18,21 +19,22 @@ import java.util.Iterator;
  *
  * @author SR
  * @author FN
- * @version 0.2
+ * @version 0.3
  */
 public class GameScreen implements Screen {
 
     private final RandomRhythm game;
     private OrthographicCamera camera;
-    private Rectangle note;
-    private Array<Rectangle> notes;
+    // Store beats
+    // Linked list used since adding and deleting are common
+    private LinkedList<Rectangle> notes;
 
     // Falling object
     private Texture noteImage;
 
     // Collection of column areas
     private Rectangle[] colAreas;
-    // Collection of columns
+    // Collection of columns, order matters
     private Column columns[];
 
     // Keyboard keys from left to right
@@ -45,7 +47,9 @@ public class GameScreen implements Screen {
 
     // Number of columns where beats fall
     private final int n_COL = 4;
+    // Track when to spawn beats
     private long lastSpawnTime;
+    // Score counter
     private int score;
 
     GameScreen(RandomRhythm game) {
@@ -55,20 +59,15 @@ public class GameScreen implements Screen {
         initCamera();
         initColumns();
 
-        notes = new Array<Rectangle>(n_COL);
         spawnNotes();
         score = 0;
     }
 
     private void spawnNotes() {
-        int i = MathUtils.random(3);
-        note = new Rectangle();
-        note.x = colAreas[i].x + colAreas[i].width / 2;
-        note.y = Gdx.graphics.getHeight();
-        note.width = 48;
-        note.height = 48;
-        notes.add(note);
-        // start time ticker
+        // Choose a random column
+        int i = MathUtils.random(n_COL - 1);
+        columns[i].spawnBeat();
+        // start time ticker to track when to spawn next
         lastSpawnTime = TimeUtils.nanoTime();
     }
 
@@ -92,8 +91,11 @@ public class GameScreen implements Screen {
         noteImage = new Texture(Gdx.files.internal("note.png"));
 
         game.batch.begin();
-        game.font.draw(game.batch, "Drops Collected: " + score, 0, Gdx.graphics.getHeight() - 30);
+        // Score
+        game.font.draw(game.batch, "Score: " + score, 0, Gdx.graphics.getHeight() - 30);
+        // Targets
         drawTargets();
+        // Beats
         for (Rectangle note : notes) {
             game.batch.draw(noteImage, note.x, note.y);
         }
@@ -128,6 +130,7 @@ public class GameScreen implements Screen {
                 score++;
                 iter.remove();
             }
+            // Note, removing beat if it reaches end of screen is done automatically
         }
 
     }
