@@ -47,9 +47,13 @@ public class GameScreen implements Screen {
     private final int n_COL = 4;
     private long lastSpawnTime;
     private int score;
+    private int difficulty;
+    private long timeDifficulty;
 
-    GameScreen(RandomRhythm game) {
+    GameScreen(RandomRhythm game, int difficulty, long timeDifficulty) {
         this.game = game;
+        this.difficulty = difficulty;
+        this.timeDifficulty = timeDifficulty;
 
         // initialize objects in game
         initCamera();
@@ -92,42 +96,52 @@ public class GameScreen implements Screen {
         noteImage = new Texture(Gdx.files.internal("note.png"));
 
         game.batch.begin();
-        game.font.draw(game.batch, "Drops Collected: " + score, 0, Gdx.graphics.getHeight() - 30);
+        game.font.draw(game.batch, "Score: " + score, 0, Gdx.graphics.getHeight() - 30);
         drawTargets();
         for (Rectangle note : notes) {
             game.batch.draw(noteImage, note.x, note.y);
         }
         game.batch.end();
 
-        // check if we need to create a new note
-        if (TimeUtils.nanoTime() - lastSpawnTime > 1000000000) {
+        // check if we need to create a new note depending on the timeDifficulty
+        if (TimeUtils.nanoTime() - lastSpawnTime > timeDifficulty && score <= 50) {
+            spawnNotes();
+        }
+
+        // increase the number of spawned notes when your score is more than 50
+        if (score > 50 && TimeUtils.nanoTime() - lastSpawnTime > timeDifficulty/2) {
             spawnNotes();
         }
 
         // make the notes fall, remove any that are beneath the bottom edge of
         // the screen or are pressed.
-        Iterator<Rectangle> iter = notes.iterator();
-        while (iter.hasNext()) {
-            Rectangle note = iter.next();
-            note.y -= 200 * Gdx.graphics.getDeltaTime();
+        Iterator<Rectangle> it = notes.iterator();
+        while (it.hasNext()) {
+            Rectangle note = it.next();
+            note.y -= difficulty * Gdx.graphics.getDeltaTime();
             if (note.y + 48 < 0)
-                iter.remove();
+                it.remove();
             if (note.overlaps(columns[0].getTargetRec()) && Gdx.input.isKeyPressed(Input.Keys.A)) {
                 score++;
-                iter.remove();
+                it.remove();
             }
             if (note.overlaps(columns[1].getTargetRec()) && Gdx.input.isKeyPressed(Input.Keys.S)) {
                 score++;
-                iter.remove();
+                it.remove();
             }
             if (note.overlaps(columns[2].getTargetRec()) && Gdx.input.isKeyPressed(Input.Keys.D)) {
                 score++;
-                iter.remove();
+                it.remove();
             }
             if (note.overlaps(columns[3].getTargetRec()) && Gdx.input.isKeyPressed(Input.Keys.F)) {
                 score++;
-                iter.remove();
+                it.remove();
             }
+        }
+
+        if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
+            dispose();
+            game.setScreen(new MainMenuScreen(game));
         }
 
     }
