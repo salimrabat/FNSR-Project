@@ -12,11 +12,11 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
  */
 public class MainMenuScreen implements Screen {
 
-    final UnnamedGame game;
+    final RandomRhythm game;
     OrthographicCamera camera;
 
 
-    public MainMenuScreen(UnnamedGame game) {
+    public MainMenuScreen(RandomRhythm game) {
         this.game = game;
         camera = new OrthographicCamera();
         camera.setToOrtho(false, 600, 800);

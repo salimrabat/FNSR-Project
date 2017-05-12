@@ -2,7 +2,7 @@ package com.projinda.fnsr.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.projinda.fnsr.UnnamedGame;
+import com.projinda.fnsr.RandomRhythm;
 
 public class DesktopLauncher {
 
@@ -11,6 +11,6 @@ public class DesktopLauncher {
 		config.title = "Random Rhythm";
 		config.width = 800;
 		config.height = 600;
-		new LwjglApplication(new UnnamedGame(), config);
+		new LwjglApplication(new RandomRhythm(), config);
 	}
 }
