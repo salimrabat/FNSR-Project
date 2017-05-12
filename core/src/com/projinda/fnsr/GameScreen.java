@@ -28,7 +28,17 @@ public class GameScreen implements Screen {
     private Array<Rectangle> notes;
 
     // Falling object
-    private Texture noteImage;
+//    private Texture blackNoteImage;
+//    private Texture redNoteImage;
+//    private Texture blueNoteImage;
+//    private Texture greenNoteImage;
+//    private Texture yellowNoteImage;
+//    private Texture limeNoteImage;
+//    private Texture orangeNoteImage;
+//    private Texture pinkNoteImage;
+//    private Texture purpleNoteImage;
+    private Texture[] notesTextures; //this is the array where the note images will be stored.
+    private Array<Texture> notesImages; // this the arraylist where the randomly chosen note images will be stored.
 
     // Collection of column areas
     private Rectangle[] colAreas;
@@ -62,6 +72,19 @@ public class GameScreen implements Screen {
         notes = new Array<Rectangle>(n_COL);
         spawnNotes();
         score = 0;
+
+        notesTextures = new Texture[8];
+
+        notesTextures[0] = new Texture(Gdx.files.internal("note.png")); //black note
+        notesTextures[1] = new Texture(Gdx.files.internal("note_red.png")); //red note
+        notesTextures[2] = new Texture(Gdx.files.internal("note_blue.png")); //blue note
+        notesTextures[3] = new Texture(Gdx.files.internal("note_green.png")); //green note
+        notesTextures[4] = new Texture(Gdx.files.internal("note_yellow.png")); //yellow note
+        notesTextures[5] = new Texture(Gdx.files.internal("note_orange.png")); // orange note
+        notesTextures[6] = new Texture(Gdx.files.internal("note_pink.png")); //pink note
+        notesTextures[7] = new Texture(Gdx.files.internal("note_purple.png")); // purple note
+
+        notesImages = new Array<Texture>(n_COL);
     }
 
     private void spawnNotes() {
@@ -93,14 +116,21 @@ public class GameScreen implements Screen {
 
         // Background and (our stationary) camera
         renderScreen();
-        noteImage = new Texture(Gdx.files.internal("note.png"));
+
+        if(notes.size != notesImages.size) {
+            int random = MathUtils.random(0, 7);
+            notesImages.add(notesTextures[random]);
+        }
+
 
         game.batch.begin();
         game.font.draw(game.batch, "Score: " + score, 0, Gdx.graphics.getHeight() - 30);
         drawTargets();
-        for (Rectangle note : notes) {
-            game.batch.draw(noteImage, note.x, note.y);
+        for(int i = 0; i < notes.size; i++) {
+            game.batch.draw(notesImages.get(i), notes.get(i).x, notes.get(i).y);
+
         }
+
         game.batch.end();
 
         // check if we need to create a new note depending on the timeDifficulty
@@ -116,31 +146,38 @@ public class GameScreen implements Screen {
         // make the notes fall, remove any that are beneath the bottom edge of
         // the screen or are pressed.
         Iterator<Rectangle> it = notes.iterator();
-        while (it.hasNext()) {
+        Iterator<Texture> iter = notesImages.iterator();
+        while (it.hasNext() && iter.hasNext()) {
             Rectangle note = it.next();
+            iter.next();
             note.y -= difficulty * Gdx.graphics.getDeltaTime();
-            if (note.y + 48 < 0)
+            if (note.y + 48 < 0) {
                 it.remove();
+                iter.remove();
+            }
             if (note.overlaps(columns[0].getTargetRec()) && Gdx.input.isKeyPressed(Input.Keys.A)) {
                 score++;
                 it.remove();
+                iter.remove();
             }
             if (note.overlaps(columns[1].getTargetRec()) && Gdx.input.isKeyPressed(Input.Keys.S)) {
                 score++;
                 it.remove();
+                iter.remove();
             }
             if (note.overlaps(columns[2].getTargetRec()) && Gdx.input.isKeyPressed(Input.Keys.D)) {
                 score++;
                 it.remove();
+                iter.remove();
             }
             if (note.overlaps(columns[3].getTargetRec()) && Gdx.input.isKeyPressed(Input.Keys.F)) {
                 score++;
                 it.remove();
+                iter.remove();
             }
         }
 
         if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
-            dispose();
             game.setScreen(new MainMenuScreen(game));
         }
 
@@ -186,7 +223,7 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         // images
-        noteImage.dispose();
+        for (Texture noteImage : notesTextures) { noteImage.dispose(); }
         for (Column col : columns) { col.dispose(); }
 
         // screen
