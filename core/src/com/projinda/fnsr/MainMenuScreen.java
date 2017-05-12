@@ -27,13 +27,13 @@ public class MainMenuScreen implements Screen {
     OrthographicCamera camera;
     Stage stage;
 
-    final int EASY = 100;
-    final int NORMAL = 200;
-    final int HARD = 300;
+    final int EASY = 200;
+    final int NORMAL = 250;
+    final int HARD = 350;
 
-    final long EASYTIME = 2000000000;
-    final long NORMALTIME = 1000000000;
-    final long HARDTIME = 500000000;
+    final long EASYTIME = 1000000000;
+    final long NORMALTIME = 1000000000/2;
+    final long HARDTIME = 1000000000/3;
 
 
     public MainMenuScreen(final RandomRhythm game) {
@@ -102,7 +102,7 @@ public class MainMenuScreen implements Screen {
         stage.addActor(hard);
 
         Label label2 = new Label("Game buttons:" +
-                "\nClick A to get the notes of the left" +
+                "\nClick A to get the notes to the left" +
                 "\nClick S to get the notes to the middle left" +
                 "\nClick D to get the notes to the middle right" +
                 "\nClick F to get the notes to the right" +
