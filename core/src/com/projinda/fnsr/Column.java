@@ -14,7 +14,8 @@ import java.util.LinkedList;
  * One column of falling beats and a target which corresponds to one given keyboard key.
  *
  * @author FN
- * @version 0.2
+ * @author SR
+ * @version 0.3
  */
 class Column {
 
