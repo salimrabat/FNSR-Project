@@ -6,10 +6,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
-
-import java.util.Iterator;
 
 /**
  * This class represents the logic of the game.
@@ -18,31 +15,20 @@ import java.util.Iterator;
  *
  * @author SR
  * @author FN
- * @version 0.2
+ * @version 0.3
  */
 public class GameScreen implements Screen {
 
     private final RandomRhythm game;
     private OrthographicCamera camera;
-    private Rectangle note;
-    private Array<Rectangle> notes;
+
 
     // Falling object
-//    private Texture blackNoteImage;
-//    private Texture redNoteImage;
-//    private Texture blueNoteImage;
-//    private Texture greenNoteImage;
-//    private Texture yellowNoteImage;
-//    private Texture limeNoteImage;
-//    private Texture orangeNoteImage;
-//    private Texture pinkNoteImage;
-//    private Texture purpleNoteImage;
-    private Texture[] notesTextures; //this is the array where the note images will be stored.
-    private Array<Texture> notesImages; // this the arraylist where the randomly chosen note images will be stored.
+    private Texture noteImage;
 
     // Collection of column areas
     private Rectangle[] colAreas;
-    // Collection of columns
+    // Collection of columns, order matters
     private Column columns[];
 
     // Keyboard keys from left to right
@@ -55,7 +41,9 @@ public class GameScreen implements Screen {
 
     // Number of columns where beats fall
     private final int n_COL = 4;
+    // Track when to spawn beats
     private long lastSpawnTime;
+    // Score counter
     private int score;
     private int difficulty;
     private long timeDifficulty;
@@ -69,33 +57,15 @@ public class GameScreen implements Screen {
         initCamera();
         initColumns();
 
-        notes = new Array<Rectangle>(n_COL);
         spawnNotes();
         score = 0;
-
-        notesTextures = new Texture[8];
-
-        notesTextures[0] = new Texture(Gdx.files.internal("note.png")); //black note
-        notesTextures[1] = new Texture(Gdx.files.internal("note_red.png")); //red note
-        notesTextures[2] = new Texture(Gdx.files.internal("note_blue.png")); //blue note
-        notesTextures[3] = new Texture(Gdx.files.internal("note_green.png")); //green note
-        notesTextures[4] = new Texture(Gdx.files.internal("note_yellow.png")); //yellow note
-        notesTextures[5] = new Texture(Gdx.files.internal("note_orange.png")); // orange note
-        notesTextures[6] = new Texture(Gdx.files.internal("note_pink.png")); //pink note
-        notesTextures[7] = new Texture(Gdx.files.internal("note_purple.png")); // purple note
-
-        notesImages = new Array<Texture>(n_COL);
     }
 
     private void spawnNotes() {
-        int i = MathUtils.random(3);
-        note = new Rectangle();
-        note.x = colAreas[i].x + colAreas[i].width / 2;
-        note.y = Gdx.graphics.getHeight();
-        note.width = 48;
-        note.height = 48;
-        notes.add(note);
-        // start time ticker
+        // Choose a random column
+        int i = MathUtils.random(n_COL - 1);
+        columns[i].spawnBeat();
+        // start time ticker to track when to spawn next
         lastSpawnTime = TimeUtils.nanoTime();
     }
 
@@ -116,21 +86,14 @@ public class GameScreen implements Screen {
 
         // Background and (our stationary) camera
         renderScreen();
+        noteImage = new Texture(Gdx.files.internal("note.png"));
 
-        if(notes.size != notesImages.size) {
-            int random = MathUtils.random(0, 7);
-            notesImages.add(notesTextures[random]);
-        }
-
-
+        // Handle batch for this game, which is every "saved thing" in the game.
         game.batch.begin();
         game.font.draw(game.batch, "Score: " + score, 0, Gdx.graphics.getHeight() - 30);
         drawTargets();
-        for(int i = 0; i < notes.size; i++) {
-            game.batch.draw(notesImages.get(i), notes.get(i).x, notes.get(i).y);
-
-        }
-
+        // Beats
+        for (Column col : columns) col.drawBeats();
         game.batch.end();
 
         // check if we need to create a new note depending on the timeDifficulty
@@ -145,42 +108,17 @@ public class GameScreen implements Screen {
 
         // make the notes fall, remove any that are beneath the bottom edge of
         // the screen or are pressed.
-        Iterator<Rectangle> it = notes.iterator();
-        Iterator<Texture> iter = notesImages.iterator();
-        while (it.hasNext() && iter.hasNext()) {
-            Rectangle note = it.next();
-            iter.next();
-            note.y -= difficulty * Gdx.graphics.getDeltaTime();
-            if (note.y + 48 < 0) {
-                it.remove();
-                iter.remove();
-            }
-            if (note.overlaps(columns[0].getTargetRec()) && Gdx.input.isKeyPressed(Input.Keys.A)) {
-                score++;
-                it.remove();
-                iter.remove();
-            }
-            if (note.overlaps(columns[1].getTargetRec()) && Gdx.input.isKeyPressed(Input.Keys.S)) {
-                score++;
-                it.remove();
-                iter.remove();
-            }
-            if (note.overlaps(columns[2].getTargetRec()) && Gdx.input.isKeyPressed(Input.Keys.D)) {
-                score++;
-                it.remove();
-                iter.remove();
-            }
-            if (note.overlaps(columns[3].getTargetRec()) && Gdx.input.isKeyPressed(Input.Keys.F)) {
-                score++;
-                it.remove();
-                iter.remove();
-            }
+        int scoreChange = 0;
+        for (Column col : columns) {
+            col.fall(difficulty);
+            col.checkEndOfScreen();
+            scoreChange += col.checkInput();
         }
+        score += scoreChange;
 
         if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             game.setScreen(new MainMenuScreen(game));
         }
-
     }
 
     /**
@@ -223,7 +161,7 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         // images
-        for (Texture noteImage : notesTextures) { noteImage.dispose(); }
+        noteImage.dispose();
         for (Column col : columns) { col.dispose(); }
 
         // screen
