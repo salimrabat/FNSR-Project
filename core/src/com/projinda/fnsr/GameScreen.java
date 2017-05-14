@@ -40,14 +40,18 @@ public class GameScreen implements Screen {
     };
 
     // Number of columns where beats fall
-    private final int n_COL = 2;
+    private final int n_COL = 4;
     // Track when to spawn beats
     private long lastSpawnTime;
     // Score counter
     private int score;
+    private int difficulty;
+    private long timeDifficulty;
 
-    GameScreen(RandomRhythm game) {
+    GameScreen(RandomRhythm game, int difficulty, long timeDifficulty) {
         this.game = game;
+        this.difficulty = difficulty;
+        this.timeDifficulty = timeDifficulty;
 
         // initialize objects in game
         initCamera();
@@ -86,16 +90,19 @@ public class GameScreen implements Screen {
 
         // Handle batch for this game, which is every "saved thing" in the game.
         game.batch.begin();
-        // Score
         game.font.draw(game.batch, "Score: " + score, 0, Gdx.graphics.getHeight() - 30);
-        // Targets
         drawTargets();
         // Beats
         for (Column col : columns) col.drawBeats();
         game.batch.end();
 
-        // check if we need to create a new note
-        if (TimeUtils.nanoTime() - lastSpawnTime > 100000000 * 5) {
+        // check if we need to create a new note depending on the timeDifficulty
+        if (TimeUtils.nanoTime() - lastSpawnTime > timeDifficulty && score <= 50) {
+            spawnNotes();
+        }
+
+        // increase the number of spawned notes when your score is more than 50
+        if (score > 50 && TimeUtils.nanoTime() - lastSpawnTime > timeDifficulty/2) {
             spawnNotes();
         }
 
@@ -103,14 +110,15 @@ public class GameScreen implements Screen {
         // the screen or are pressed.
         int scoreChange = 0;
         for (Column col : columns) {
-            col.fall();
+            col.fall(difficulty);
             col.checkEndOfScreen();
-            // bugs detected:
-            // tbe score counters are separated for each column
-            // only the last beat per column can append score
             scoreChange += col.checkInput();
         }
         score += scoreChange;
+
+        if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
+            game.setScreen(new MainMenuScreen(game));
+        }
     }
 
     /**

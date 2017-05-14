@@ -15,4 +15,4 @@ Any possible further options are planned to be implemented within the user inter
 
 ## Frameworks
 
-We're using the LibGDX game engine, which uses the LWJGL.
+We're using the LibGDX game engine, which uses a game library for Java LWJGL. Although it has a lot more than our project needs, it is one of the safer choices for Java game engines since it is well maintained and up-to-date.
