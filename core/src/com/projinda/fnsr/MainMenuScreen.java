@@ -17,7 +17,8 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 
 /**
- * Created by Salim Rabat and Frans Nyberg on 07/05/2017.
+ * Created by Salim Rabat on 07/05/2017.
+ * @author SR
  * This Screen represents the Main Menu Screen, where you can click on start to start the game or choose between
  * easy mode, normal mode and hard mode.
  */
