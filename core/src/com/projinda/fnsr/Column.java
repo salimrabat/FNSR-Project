@@ -106,11 +106,12 @@ class Column {
 
     /**
      * Animate all beats falling by moving a constant distance down.
+     * @param rate, increase for faster falling
      */
-    void fall() {
+    void fall(int rate) {
         for (Rectangle beat : beats) {
             // 200 pixels per second
-            beat.y -= 200 * Gdx.graphics.getDeltaTime();
+            beat.y -= rate * Gdx.graphics.getDeltaTime();
         }
     }
 

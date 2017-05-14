@@ -23,20 +23,20 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
  */
 public class MainMenuScreen implements Screen {
 
-    final RandomRhythm game;
-    OrthographicCamera camera;
-    Stage stage;
+    private final RandomRhythm game;
+    private OrthographicCamera camera;
+    private Stage stage;
 
-    final int EASY = 200;
-    final int NORMAL = 250;
-    final int HARD = 350;
+    private final int EASY = 200;
+    private final int NORMAL = 250;
+    private final int HARD = 350;
 
-    final long EASYTIME = 1000000000;
-    final long NORMALTIME = 1000000000/2;
-    final long HARDTIME = 1000000000/3;
+    private final long EASYTIME = 1000000000;
+    private final long NORMALTIME = 1000000000/2;
+    private final long HARDTIME = 1000000000/3;
 
 
-    public MainMenuScreen(final RandomRhythm game) {
+    MainMenuScreen(final RandomRhythm game) {
         this.game = game;
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -142,8 +142,8 @@ public class MainMenuScreen implements Screen {
     }
 
     /**
-     * @param width
-     * @param height
+     * @param width of screen
+     * @param height of screen
      * @see ApplicationListener#resize(int, int)
      */
     @Override
