@@ -120,20 +120,35 @@ class Column {
      */
     int checkInput() {
         int scoreChange = 0;
-        beatIterator = beats.iterator();
-        while (beatIterator.hasNext()) {
-            // next beat
-            Rectangle beat = beatIterator.next();
-            if (Gdx.input.isKeyJustPressed(clickKey)) {
+        if (Gdx.input.isKeyJustPressed(clickKey)) {
+            scoreChange = checkTarget();
+        }
+        return scoreChange;
+    }
+
+    /**
+     * Reads all beats within target range and appends one score per beat.
+     * If no beats are within target range, score is reduced.
+     * @return change of score.
+     */
+    private int checkTarget() {
+        int scoreChange = 0;
+        if (beats.isEmpty()) {
+            scoreChange--;
+        } else {
+            // Look for possible beats within target range
+            boolean hitTarget = false;
+            beatIterator = beats.iterator();
+            while (beatIterator.hasNext()) {
+                // next beat
+                Rectangle beat = beatIterator.next();
                 if (beat.overlaps(targetRec)) {
                     beatIterator.remove();
                     scoreChange++;
-                }
-                else {
-                    // player inputs when beat is not within target range
-                    scoreChange--;
+                    hitTarget = true;
                 }
             }
+            if (!hitTarget) scoreChange--;
         }
         return scoreChange;
     }
@@ -142,7 +157,6 @@ class Column {
      * Removes beats if they fall outside the visible screen.
      */
     void checkEndOfScreen() {
-        System.out.printf("%s\n", beats.size());
         beatIterator = beats.iterator();
         while (beatIterator.hasNext()) {
             // next beat

@@ -40,7 +40,7 @@ public class GameScreen implements Screen {
     };
 
     // Number of columns where beats fall
-    private final int n_COL = 4;
+    private final int n_COL = 2;
     // Track when to spawn beats
     private long lastSpawnTime;
     // Score counter
@@ -95,18 +95,22 @@ public class GameScreen implements Screen {
         game.batch.end();
 
         // check if we need to create a new note
-        if (TimeUtils.nanoTime() - lastSpawnTime > 1000000000) {
+        if (TimeUtils.nanoTime() - lastSpawnTime > 100000000 * 5) {
             spawnNotes();
         }
 
         // make the notes fall, remove any that are beneath the bottom edge of
         // the screen or are pressed.
+        int scoreChange = 0;
         for (Column col : columns) {
             col.fall();
-            score += col.checkInput();
             col.checkEndOfScreen();
+            // bugs detected:
+            // tbe score counters are separated for each column
+            // only the last beat per column can append score
+            scoreChange += col.checkInput();
         }
-
+        score += scoreChange;
     }
 
     /**
