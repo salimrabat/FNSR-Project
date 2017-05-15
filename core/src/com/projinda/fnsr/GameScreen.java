@@ -50,7 +50,7 @@ import com.badlogic.gdx.utils.TimeUtils;
     // Game over when attempts reaches 0
     private int attempts = 5;
     // at this score, increase difficulty
-    private int rampDifficulty = 50;
+    private int rampDifficulty = 30;
     // stop animations
     private boolean gameIsOver = false;
 
@@ -264,6 +264,5 @@ import com.badlogic.gdx.utils.TimeUtils;
         game.font.draw(game.batch,
                 ending + "\nPress esc to return to main menu",
                 messageXPos, messageYPos);
-        //game.setScreen(new MainMenuScreen(game));
     }
 }
