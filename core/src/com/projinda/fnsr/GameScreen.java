@@ -15,9 +15,9 @@ import com.badlogic.gdx.utils.TimeUtils;
  *
  * @author SR
  * @author FN
- * @version 0.3
+ * @version 1.0
  */
-public class GameScreen implements Screen {
+ class GameScreen implements Screen {
 
     private final RandomRhythm game;
     private OrthographicCamera camera;

@@ -5,7 +5,14 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-public class RandomRhythm extends Game {
+/**
+ * RandomRhythm initiates the game (starting at Main Menu).
+ *
+ * @author SR
+ * @author FN
+ * @version 1.0
+ */
+ public class RandomRhythm extends Game {
 
 	SpriteBatch batch;
 	BitmapFont font;

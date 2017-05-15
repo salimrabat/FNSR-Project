@@ -30,7 +30,7 @@ import static org.junit.Assert.*;
  * </ul>
  *
  * @author FN
- * @version 0.2
+ * @version 1.0
  */
 public class RhythmTest extends GdxTest {
 

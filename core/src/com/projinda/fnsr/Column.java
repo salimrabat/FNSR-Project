@@ -15,7 +15,7 @@ import java.util.LinkedList;
  *
  * @author FN
  * @author SR
- * @version 0.3
+ * @version 1.0
  */
 class Column {
 
