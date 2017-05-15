@@ -146,7 +146,7 @@ public class ColumnTest extends GdxTest {
         if (all_beats) {
             // Cover for the case where a beat is just removed
             assertTrue("either too few or too many beats",
-                    max_n_beats_falling > n_beats || n_beats > max_n_beats_falling - 1);
+                    max_n_beats_falling >= n_beats && n_beats >= max_n_beats_falling - 1);
         } else {
             assertTrue("too many beats," + n_beats,n_beats < max_n_beats_falling);
         }
