@@ -196,6 +196,9 @@ class Column {
         }
     }
 
+    /**
+     * Dispose resources at closing of game instance.
+     */
     void dispose() {
         noteCImage.dispose();
         for (Texture noteimg : notesImages) {

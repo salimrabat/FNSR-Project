@@ -2,7 +2,7 @@ package com.projinda.fnsr.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.projinda.fnsr.ColumnTest;
+import com.projinda.fnsr.RhythmTest;
 
 public class DesktopLauncherTest {
 
@@ -13,6 +13,6 @@ public class DesktopLauncherTest {
 		config.height = 768;
 		// force exit when tests are done
 		config.forceExit = true;
-		new LwjglApplication(new ColumnTest(), config);
+		new LwjglApplication(new RhythmTest(), config);
 	}
 }

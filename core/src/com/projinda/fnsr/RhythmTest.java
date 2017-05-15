@@ -21,12 +21,18 @@ import static org.junit.Assert.*;
  * which are appropriate when possible bugs are invisible.
  * Assertion tests are however only made when that is feasible.
  *
- * Correct visual series of events should be: TODO
+ * Correct visual series of events should be:
+ * <ul>
+ *     <li>Columns should be drawn symmetrically by the y-axis.</li>
+ *     <li>Leftmost column does not fall, only beats which change colour.</li>
+ *     <li>Rightmost column animates falling of beats changing colour too.</li>
+ *     <li>Targets should be drawn close to bottom of screen and falling beats intersect them.</li>
+ * </ul>
  *
  * @author FN
  * @version 0.2
  */
-public class ColumnTest extends GdxTest {
+public class RhythmTest extends GdxTest {
 
     // Test parameters
     private Column[] columnTests;
@@ -83,7 +89,8 @@ public class ColumnTest extends GdxTest {
     }
 
     /**
-     * Start the game tests
+     * Start the game tests.
+     * Game test ends automatically.
      */
     @Override
     public void render() {
@@ -119,7 +126,6 @@ public class ColumnTest extends GdxTest {
 
     /**
      * Draw beats at start, visual test.
-     * Should draw symmetrically and change colours.
      */
     private void testSpawnBeat() {
         // Spawn on both columns
@@ -129,8 +135,8 @@ public class ColumnTest extends GdxTest {
     }
 
     /**
-     * Draw animation of beat falling, visual test.
-     * Ensure speed of falling by counting the number of beats, assertion test.
+     * Draw animation of beat falling, visual test and assertion test.
+     * Asserts speed of falling, i.e. the rhythm, by counting the number of beats.
      * Let only one column call fall.
      *
      * @param all_beats true when we expect all beats to have spawned
