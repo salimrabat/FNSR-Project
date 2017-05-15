@@ -182,8 +182,10 @@ class Column {
 
     /**
      * Removes beats if they fall outside the visible screen.
+     * @return -1 if some beat reaches end of screen, otherwise 0.
      */
-    void checkEndOfScreen() {
+    int checkEndOfScreen() {
+        int attemptChange = 0;
         beatIterator = beats.iterator();
         Iterator<Texture> imgIterator = notesImages.iterator();
         while (beatIterator.hasNext()) {
@@ -192,8 +194,10 @@ class Column {
             if (beatIterator.next().y < columnRec.y - sizeNoteImage.y){
                 beatIterator.remove();
                 imgIterator.remove();
+                attemptChange--;
             }
         }
+        return attemptChange;
     }
 
     /**

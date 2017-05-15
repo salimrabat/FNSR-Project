@@ -47,6 +47,8 @@ import com.badlogic.gdx.utils.TimeUtils;
     private int score;
     private int difficulty;
     private long timeDifficulty;
+    // Game over when attempts reaches 0
+    private int attempts = 5;
 
     GameScreen(RandomRhythm game, int difficulty, long timeDifficulty) {
         this.game = game;
@@ -90,7 +92,11 @@ import com.badlogic.gdx.utils.TimeUtils;
 
         // Handle batch for this game, which is every "saved thing" in the game.
         game.batch.begin();
-        game.font.draw(game.batch, "Score: " + score, 0, Gdx.graphics.getHeight() - 30);
+        // number of pixels below top of screen
+        int scorePosition = 30;
+        int attemptPosition = scorePosition - 20;
+        game.font.draw(game.batch, "Score: " + score, 0, Gdx.graphics.getHeight() - scorePosition);
+        game.font.draw(game.batch, "Lives: " + attempts, 0, Gdx.graphics.getHeight() - attemptPosition);
         drawTargets();
         // Beats
         for (Column col : columns) col.drawBeats();
@@ -109,17 +115,22 @@ import com.badlogic.gdx.utils.TimeUtils;
         // make the notes fall, remove any that are beneath the bottom edge of
         // the screen or are pressed.
         int scoreChange = 0;
+        int attemptsChange = 0;
         for (Column col : columns) {
             col.fall(difficulty);
-            col.checkEndOfScreen();
+            attemptsChange += col.checkEndOfScreen();
             scoreChange += col.checkInput();
         }
         score += scoreChange;
+        attempts += attemptsChange;
 
         // Check escape press
         if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             game.setScreen(new MainMenuScreen(game));
         }
+
+        // Game over
+        if (attempts == 0) game.setScreen(new MainMenuScreen(game));
     }
 
     /**

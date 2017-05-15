@@ -12,7 +12,9 @@ import com.badlogic.gdx.utils.TimeUtils;
 import static org.junit.Assert.*;
 
 /**
- * Test class for Column.
+ * Test class for Column. If the game reaches exit
+ * without thrown exception, the test passes.
+ *
  * Part of the testing is visual to see if it's player-friendly.
  * This is because most methods in Column (except score counting)
  * return void and are there to change the game visually;
