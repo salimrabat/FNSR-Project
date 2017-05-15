@@ -49,6 +49,8 @@ import com.badlogic.gdx.utils.TimeUtils;
     private long timeDifficulty;
     // Game over when attempts reaches 0
     private int attempts = 5;
+    // at this score, increase difficulty
+    private int rampDifficulty = 50;
 
     GameScreen(RandomRhythm game, int difficulty, long timeDifficulty) {
         this.game = game;
@@ -103,7 +105,7 @@ import com.badlogic.gdx.utils.TimeUtils;
         game.batch.end();
 
         // check if we need to create a new note depending on the timeDifficulty
-        if (TimeUtils.nanoTime() - lastSpawnTime > timeDifficulty && score <= 50) {
+        if (TimeUtils.nanoTime() - lastSpawnTime > timeDifficulty && score <= rampDifficulty) {
             spawnBeats();
         }
 
@@ -131,6 +133,9 @@ import com.badlogic.gdx.utils.TimeUtils;
 
         // Game over
         if (attempts == 0) game.setScreen(new MainMenuScreen(game));
+
+        // Game win
+        if (score == rampDifficulty * 2) game.setScreen(new MainMenuScreen(game));
     }
 
     /**
