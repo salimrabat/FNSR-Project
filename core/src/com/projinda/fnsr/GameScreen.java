@@ -92,53 +92,51 @@ import com.badlogic.gdx.utils.TimeUtils;
     @Override
     public void render(float delta) {
 
-        // Background and (our stationary) camera
-        renderScreen();
-        noteImage = new Texture(Gdx.files.internal("note.png"));
+        if (!gameIsOver) {
+            // Background and (our stationary) camera
+            renderScreen();
+            noteImage = new Texture(Gdx.files.internal("note.png"));
 
-        // check if we need to create a new note depending on the timeDifficulty
-        if (TimeUtils.nanoTime() - lastSpawnTime > timeDifficulty && score <= rampDifficulty) {
-            spawnBeats();
+            // check if we need to create a new note depending on the timeDifficulty
+            if (TimeUtils.nanoTime() - lastSpawnTime > timeDifficulty && score <= rampDifficulty) {
+                spawnBeats();
+            }
+
+            // increase the number of spawned notes when your score is more than a given limit
+            if (score > rampDifficulty && TimeUtils.nanoTime() - lastSpawnTime > timeDifficulty / 2) {
+                spawnBeats();
+            }
+
+            // make the notes fall, remove any that are beneath the bottom edge of
+            // the screen or are pressed.
+            int scoreChange = 0;
+            int attemptsChange = 0;
+            for (Column col : columns) {
+                col.fall(difficulty);
+                attemptsChange += col.checkEndOfScreen();
+                scoreChange += col.checkInput();
+            }
+            score += scoreChange;
+            attempts += attemptsChange;
         }
-
-        // increase the number of spawned notes when your score is more than 50
-        if (score > 50 && TimeUtils.nanoTime() - lastSpawnTime > timeDifficulty/2) {
-            spawnBeats();
-        }
-
-        // make the notes fall, remove any that are beneath the bottom edge of
-        // the screen or are pressed.
-        int scoreChange = 0;
-        int attemptsChange = 0;
-        for (Column col : columns) {
-            col.fall(difficulty);
-            attemptsChange += col.checkEndOfScreen();
-            scoreChange += col.checkInput();
-        }
-        score += scoreChange;
-        attempts += attemptsChange;
-
         // Check escape press
-        if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             game.setScreen(new MainMenuScreen(game));
         }
-
         // Handle batch for this game, which is every "saved thing" in the game.
         game.batch.begin();
-        if (!gameIsOver) {
-            // number of pixels below top of screen
-            int scorePosition = 30;
-            int attemptPosition = scorePosition - 20;
-            game.font.draw(game.batch, "Score: " + score, 0, Gdx.graphics.getHeight() - scorePosition);
-            game.font.draw(game.batch, "Lives: " + attempts, 0, Gdx.graphics.getHeight() - attemptPosition);
-            drawTargets();
-            // Beats
-            for (Column col : columns) col.drawBeats();
-        }
+        // number of pixels below top of screen
+        int scorePosition = 30;
+        int attemptPosition = scorePosition - 20;
+        game.font.draw(game.batch, "Score: " + score +
+                "\nAttemps: " + attempts, 0, Gdx.graphics.getHeight() - scorePosition);
+        drawTargets();
+        // Beats
+        for (Column col : columns) col.drawBeats();
         // Game over
-        if (attempts <= 0) gameOver();
+        if (attempts <= 0) gameOver(false);
         // Game win
-        if (score >= rampDifficulty * 2) gameOver();
+        else if (score >= rampDifficulty * 2) gameOver(true);
         game.batch.end();
     }
 
@@ -230,7 +228,7 @@ import com.badlogic.gdx.utils.TimeUtils;
         // arguments to glClearColor are the red, green
         // blue and alpha component in the range [0,1]
         // of the color to be used to clear the screen.
-        Gdx.gl.glClearColor(0.5f, 0.9f, 0.9f, 1);
+        Gdx.gl.glClearColor(0.3f, 0.7f, 0.7f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // tell the camera to update its matrices.
@@ -250,17 +248,22 @@ import com.badlogic.gdx.utils.TimeUtils;
 
     /**
      * Handles a game over, either loss or win kind of over.
+     *
+     * @param beatTheGame affects end message.
      */
-    private void gameOver() {
+    private void gameOver(boolean beatTheGame) {
         gameIsOver = true;
+        // message depending if you beat it or if you failed
+        String ending;
+        ending = beatTheGame ? "Stage Clear" : "Game Over";
         // Stop the render loop for internal calls (inputs are still read)
         Gdx.graphics.setContinuousRendering(false);
         // top of game over messages
         int messageXPos = Gdx.graphics.getWidth() / 4;
         int messageYPos = Gdx.graphics.getHeight() / 2;
-        game.font.draw(game.batch, "Game Over", messageXPos, messageYPos);
-        game.font.draw(game.batch, "Press esc to return to main menu",
-                messageXPos, messageYPos - 30);
+        game.font.draw(game.batch,
+                ending + "\nPress esc to return to main menu",
+                messageXPos, messageYPos);
         //game.setScreen(new MainMenuScreen(game));
     }
 }
