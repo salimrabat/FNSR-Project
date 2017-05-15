@@ -2,6 +2,7 @@ package com.projinda.fnsr;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.TimeUtils;
@@ -18,10 +19,11 @@ import com.projinda.fnsr.test_utils.GdxTest;
  */
 public class ColumnTest extends GdxTest {
 
-    private Column[] columnTests;
-
     // Test parameters
+    private Column[] columnTests;
     private final int numCol = 2;
+    private final int steps = 2;    // exactly 2 beats will be on the fall test column
+    private int beatYPoxChange;
 
     // Game parameters
     private RandomRhythm gameScreen;
@@ -38,19 +40,23 @@ public class ColumnTest extends GdxTest {
      */
     @Override
     public void create() {
+
         gameScreen = new RandomRhythm();
         gameScreen.batch = new SpriteBatch();
         columnTests = new Column[numCol];
         for ( int i = 0; i < numCol; i++ ) {
             // Setup columns equidistantly
-            int colWidth = Gdx.graphics.getWidth() / numCol;
-            int colHeight = Gdx.graphics.getHeight();
-            int col_x = Gdx.graphics.getWidth() * i / numCol;
-            int col_y = 0;
+            Rectangle columnArea = new Rectangle();
+            columnArea.width = Gdx.graphics.getWidth() / numCol;
+            columnArea.height = Gdx.graphics.getHeight();
+            columnArea.x= Gdx.graphics.getWidth() / numCol * i;
+            columnArea.y = 0;
             // Create columns
-            Rectangle columnArea = new Rectangle(colWidth, colHeight, col_x, col_y);
             columnTests[i] = new Column(gameScreen, columnArea, keyboardKeys[i]);
         }
+
+        // Define test specific constants.
+        beatYPoxChange = Gdx.graphics.getHeight() / steps;
     }
 
     /**
@@ -58,23 +64,45 @@ public class ColumnTest extends GdxTest {
      */
     @Override
     public void render() {
+        // Put a grey background
+        Gdx.gl.glClearColor(0.5f, 0.5f, 0.5f, 1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
         gameScreen.batch.begin();
+        testDrawTarget();
         if (TimeUtils.nanoTime() - lastSpawnTime > 1e9) { // 1 second
             testSpawnBeat();
         }
+        for (Column col : columnTests ) col.drawBeats();
         gameScreen.batch.end();
+
+        testFall();
     }
 
     /**
-     * Test spawning and drawing beats.
+     * Draw targets, visual test.
+     */
+    private void testDrawTarget() {
+        for (Column col : columnTests) col.drawTarget();
+    }
+
+    /**
+     * Draw beats at start, visual test.
+     * Should draw symmetrically and change colours.
      */
     private void testSpawnBeat() {
         // Spawn on both columns
-        for (Column col : columnTests) {
-            col.spawnBeat();
-            col.drawBeats();
-        }
+        for (Column col : columnTests) col.spawnBeat();
         // start timer
         lastSpawnTime = TimeUtils.nanoTime();
+    }
+
+    /**
+     * Draw animation of beat falling, visual test.
+     * Let only first (index 0) column fall.
+     * Colour should not change on beat.
+     */
+    private void testFall() {
+        columnTests[0].fall(beatYPoxChange);
     }
 }
