@@ -9,6 +9,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.TimeUtils;
 
+import static org.junit.Assert.*;
+
 /**
  * Test class for Column.
  * Part of the testing is visual to see if it's player-friendly.
@@ -93,8 +95,8 @@ public class ColumnTest extends GdxTest {
         // Test beats animation
         boolean all_beats = false;
         long sinceStart = lastSpawnTime - testStart;
-        if (sinceStart > spawnInterval / 2) all_beats = true;
-        System.out.printf("%s, %s\n", sinceStart, spawnInterval);
+        if (sinceStart > spawnInterval / 2
+                && sinceStart < 2 * spawnInterval) all_beats = true;
         testFall(all_beats);
 
         // end of test
@@ -121,6 +123,7 @@ public class ColumnTest extends GdxTest {
 
     /**
      * Draw animation of beat falling, visual test.
+     * Ensure speed of falling by counting the number of beats, assertion test.
      * Let only one column call fall.
      *
      * @param all_beats true when we expect all beats to have spawned
@@ -131,9 +134,9 @@ public class ColumnTest extends GdxTest {
         // Test falling once we expect all beats have spawned.
         int n_beats = columnTests[fallColIndex].getBeats().size();
         if (all_beats) {
-            assert n_beats == max_n_beats_falling;
+            assertEquals(n_beats, max_n_beats_falling);
         } else {
-            assert n_beats < max_n_beats_falling;
+            assertTrue("too many beats: " + n_beats,n_beats < max_n_beats_falling);
         }
     }
 }
