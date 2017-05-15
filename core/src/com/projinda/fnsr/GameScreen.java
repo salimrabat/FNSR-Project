@@ -127,7 +127,6 @@ import com.badlogic.gdx.utils.TimeUtils;
         game.batch.begin();
         // number of pixels below top of screen
         int scorePosition = 30;
-        int attemptPosition = scorePosition - 20;
         game.font.draw(game.batch, "Score: " + score +
                 "\nAttemps: " + attempts, 0, Gdx.graphics.getHeight() - scorePosition);
         drawTargets();
@@ -228,7 +227,7 @@ import com.badlogic.gdx.utils.TimeUtils;
         // arguments to glClearColor are the red, green
         // blue and alpha component in the range [0,1]
         // of the color to be used to clear the screen.
-        Gdx.gl.glClearColor(0.3f, 0.7f, 0.7f, 1);
+        Gdx.gl.glClearColor(0.5f, 0.9f, 0.9f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // tell the camera to update its matrices.
