@@ -17,28 +17,34 @@ import static org.junit.Assert.*;
  * This is because most methods in Column (except score counting)
  * return void and are there to change the game visually;
  * and since some elements such as colours are random.
- *
- * Assertion tests are made when feasible.
+ * Other tests are assertion tests,
+ * which are appropriate when possible bugs are invisible.
+ * Assertion tests are however only made when that is feasible.
  *
  * Correct visual series of events should be: TODO
  *
  * @author FN
- * @version 0.1
+ * @version 0.2
  */
 public class ColumnTest extends GdxTest {
 
     // Test parameters
     private Column[] columnTests;
     private final int numCol = 2;
-    private final int max_n_beats_falling = 2;
-    // change of frame per falling call
+    // Measure falling speed by counting all possible beats on one column
+    private final int max_n_beats_falling = 3;
+    // change of frame per fall method call
     private int beatYPosChange;
+    // number of beats spawned on screen per second
+    // Determines how fast notes spawn
+    private int spawningRate = 2;
     // time when test starts
     private long testStart;
     // time between spawns of beats.
-    private final long spawnInterval = (long) Math.pow(10,9);   // 1 second
-    // stop testing after this
-    private final long max_spawns = 5;
+    private final long spawnInterval = (long) 1e9 / max_n_beats_falling * spawningRate;
+    // stop testing after this time
+    // Determines how long this test will take
+    private final long max_spawns = 5 * max_n_beats_falling / spawningRate;
 
     // Game parameters
     private RandomRhythm gameScreen;
@@ -71,7 +77,8 @@ public class ColumnTest extends GdxTest {
         }
 
         // Define test specific constants.
-        beatYPosChange = Gdx.graphics.getHeight() / max_n_beats_falling;
+        // One beat takes 1 second to fall all the way
+        beatYPosChange = Gdx.graphics.getHeight() / spawningRate;
         testStart = TimeUtils.nanoTime();
     }
 
@@ -95,8 +102,8 @@ public class ColumnTest extends GdxTest {
         // Test beats animation
         boolean all_beats = false;
         long sinceStart = lastSpawnTime - testStart;
-        if (sinceStart > spawnInterval / 2
-                && sinceStart < 2 * spawnInterval) all_beats = true;
+        // All beats should have spawned after some time
+        if (sinceStart > spawnInterval * (max_n_beats_falling - 1)) all_beats = true;
         testFall(all_beats);
 
         // end of test
@@ -130,13 +137,18 @@ public class ColumnTest extends GdxTest {
      */
     private void testFall(boolean all_beats) throws RuntimeException {
         int fallColIndex = 1;
-        columnTests[fallColIndex].fall(beatYPosChange);
+        Column fallCol = columnTests[fallColIndex];
+
+        fallCol.fall(beatYPosChange);
+        fallCol.checkEndOfScreen();
         // Test falling once we expect all beats have spawned.
-        int n_beats = columnTests[fallColIndex].getBeats().size();
+        int n_beats = fallCol.getBeats().size();
         if (all_beats) {
-            assertEquals(n_beats, max_n_beats_falling);
+            // Cover for the case where a beat is just removed
+            assertTrue("either too few or too many beats",
+                    max_n_beats_falling > n_beats || n_beats > max_n_beats_falling - 1);
         } else {
-            assertTrue("too many beats: " + n_beats,n_beats < max_n_beats_falling);
+            assertTrue("too many beats," + n_beats,n_beats < max_n_beats_falling);
         }
     }
 }

@@ -189,7 +189,7 @@ class Column {
         while (beatIterator.hasNext()) {
             imgIterator.next();
             // next beat
-            if (beatIterator.next().y < -sizeNoteImage.y){
+            if (beatIterator.next().y < columnRec.y - sizeNoteImage.y){
                 beatIterator.remove();
                 imgIterator.remove();
             }
