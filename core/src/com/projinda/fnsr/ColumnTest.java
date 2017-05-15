@@ -1,18 +1,24 @@
 package com.projinda.fnsr;
 
+import com.projinda.fnsr.test_utils.GdxTest;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.TimeUtils;
-import com.projinda.fnsr.test_utils.GdxTest;
 
 /**
  * Test class for Column.
  * Part of the testing is visual to see if it's player-friendly.
  * This is because most methods in Column (except score counting)
- * return void and are there to change the game visually.
+ * return void and are there to change the game visually;
+ * and since some elements such as colours are random.
+ *
+ * Assertion tests are made when feasible.
+ *
+ * Correct visual series of events should be: TODO
  *
  * @author FN
  * @version 0.1
@@ -22,8 +28,15 @@ public class ColumnTest extends GdxTest {
     // Test parameters
     private Column[] columnTests;
     private final int numCol = 2;
-    private final int steps = 2;    // exactly 2 beats will be on the fall test column
-    private int beatYPoxChange;
+    private final int max_n_beats_falling = 2;
+    // change of frame per falling call
+    private int beatYPosChange;
+    // time when test starts
+    private long testStart;
+    // time between spawns of beats.
+    private final long spawnInterval = (long) Math.pow(10,9);   // 1 second
+    // stop testing after this
+    private final long max_spawns = 5;
 
     // Game parameters
     private RandomRhythm gameScreen;
@@ -56,7 +69,8 @@ public class ColumnTest extends GdxTest {
         }
 
         // Define test specific constants.
-        beatYPoxChange = Gdx.graphics.getHeight() / steps;
+        beatYPosChange = Gdx.graphics.getHeight() / max_n_beats_falling;
+        testStart = TimeUtils.nanoTime();
     }
 
     /**
@@ -70,13 +84,21 @@ public class ColumnTest extends GdxTest {
 
         gameScreen.batch.begin();
         testDrawTarget();
-        if (TimeUtils.nanoTime() - lastSpawnTime > 1e9) { // 1 second
+        if (TimeUtils.nanoTime() - lastSpawnTime > spawnInterval) {
             testSpawnBeat();
         }
         for (Column col : columnTests ) col.drawBeats();
         gameScreen.batch.end();
 
-        testFall();
+        // Test beats animation
+        boolean all_beats = false;
+        long sinceStart = lastSpawnTime - testStart;
+        if (sinceStart > spawnInterval / 2) all_beats = true;
+        System.out.printf("%s, %s\n", sinceStart, spawnInterval);
+        testFall(all_beats);
+
+        // end of test
+        if (sinceStart > spawnInterval * max_spawns) Gdx.app.exit();
     }
 
     /**
@@ -99,10 +121,19 @@ public class ColumnTest extends GdxTest {
 
     /**
      * Draw animation of beat falling, visual test.
-     * Let only first (index 0) column fall.
-     * Colour should not change on beat.
+     * Let only one column call fall.
+     *
+     * @param all_beats true when we expect all beats to have spawned
      */
-    private void testFall() {
-        columnTests[0].fall(beatYPoxChange);
+    private void testFall(boolean all_beats) throws RuntimeException {
+        int fallColIndex = 1;
+        columnTests[fallColIndex].fall(beatYPosChange);
+        // Test falling once we expect all beats have spawned.
+        int n_beats = columnTests[fallColIndex].getBeats().size();
+        if (all_beats) {
+            assert n_beats == max_n_beats_falling;
+        } else {
+            assert n_beats < max_n_beats_falling;
+        }
     }
 }

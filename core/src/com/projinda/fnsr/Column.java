@@ -88,6 +88,9 @@ class Column {
         targetRec = new Rectangle(TXPos, TYPos, sizeNoteCImage.x, sizeNoteCImage.y);
     }
 
+    /** @return beats field */
+    LinkedList<Rectangle> getBeats() { return beats; }
+
     /**
      * Draw the boundaries of the target for beats.
      */

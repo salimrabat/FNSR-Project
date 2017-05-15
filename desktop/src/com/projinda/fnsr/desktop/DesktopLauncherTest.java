@@ -2,15 +2,17 @@ package com.projinda.fnsr.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.projinda.fnsr.RandomRhythm;
+import com.projinda.fnsr.ColumnTest;
 
-public class DesktopLauncher {
+public class DesktopLauncherTest {
 
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.title = "Random Rhythm";
 		config.width = 1024;
 		config.height = 768;
-		new LwjglApplication(new RandomRhythm(), config);
+		// force exit when tests are done
+		config.forceExit = true;
+		new LwjglApplication(new ColumnTest(), config);
 	}
 }
