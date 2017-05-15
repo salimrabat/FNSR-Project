@@ -51,6 +51,8 @@ import com.badlogic.gdx.utils.TimeUtils;
     private int attempts = 5;
     // at this score, increase difficulty
     private int rampDifficulty = 50;
+    // stop animations
+    private boolean gameIsOver = false;
 
     GameScreen(RandomRhythm game, int difficulty, long timeDifficulty) {
         this.game = game;
@@ -63,6 +65,8 @@ import com.badlogic.gdx.utils.TimeUtils;
         // spawn first beat and start timer for next beat
         spawnBeats();
         score = 0;
+        // in case it was set to false
+        Gdx.graphics.setContinuousRendering(true);
     }
 
     private void spawnBeats() {
@@ -92,18 +96,6 @@ import com.badlogic.gdx.utils.TimeUtils;
         renderScreen();
         noteImage = new Texture(Gdx.files.internal("note.png"));
 
-        // Handle batch for this game, which is every "saved thing" in the game.
-        game.batch.begin();
-        // number of pixels below top of screen
-        int scorePosition = 30;
-        int attemptPosition = scorePosition - 20;
-        game.font.draw(game.batch, "Score: " + score, 0, Gdx.graphics.getHeight() - scorePosition);
-        game.font.draw(game.batch, "Lives: " + attempts, 0, Gdx.graphics.getHeight() - attemptPosition);
-        drawTargets();
-        // Beats
-        for (Column col : columns) col.drawBeats();
-        game.batch.end();
-
         // check if we need to create a new note depending on the timeDifficulty
         if (TimeUtils.nanoTime() - lastSpawnTime > timeDifficulty && score <= rampDifficulty) {
             spawnBeats();
@@ -131,11 +123,23 @@ import com.badlogic.gdx.utils.TimeUtils;
             game.setScreen(new MainMenuScreen(game));
         }
 
+        // Handle batch for this game, which is every "saved thing" in the game.
+        game.batch.begin();
+        if (!gameIsOver) {
+            // number of pixels below top of screen
+            int scorePosition = 30;
+            int attemptPosition = scorePosition - 20;
+            game.font.draw(game.batch, "Score: " + score, 0, Gdx.graphics.getHeight() - scorePosition);
+            game.font.draw(game.batch, "Lives: " + attempts, 0, Gdx.graphics.getHeight() - attemptPosition);
+            drawTargets();
+            // Beats
+            for (Column col : columns) col.drawBeats();
+        }
         // Game over
-        if (attempts == 0) game.setScreen(new MainMenuScreen(game));
-
+        if (attempts <= 0) gameOver();
         // Game win
-        if (score == rampDifficulty * 2) game.setScreen(new MainMenuScreen(game));
+        if (score >= rampDifficulty * 2) gameOver();
+        game.batch.end();
     }
 
     /**
@@ -242,5 +246,21 @@ import com.badlogic.gdx.utils.TimeUtils;
      */
     private void drawTargets() {
         for (Column col : columns) col.drawTarget();
+    }
+
+    /**
+     * Handles a game over, either loss or win kind of over.
+     */
+    private void gameOver() {
+        gameIsOver = true;
+        // Stop the render loop for internal calls (inputs are still read)
+        Gdx.graphics.setContinuousRendering(false);
+        // top of game over messages
+        int messageXPos = Gdx.graphics.getWidth() / 4;
+        int messageYPos = Gdx.graphics.getHeight() / 2;
+        game.font.draw(game.batch, "Game Over", messageXPos, messageYPos);
+        game.font.draw(game.batch, "Press esc to return to main menu",
+                messageXPos, messageYPos - 30);
+        //game.setScreen(new MainMenuScreen(game));
     }
 }
