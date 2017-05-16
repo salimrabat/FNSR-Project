@@ -15,9 +15,9 @@ import com.badlogic.gdx.utils.TimeUtils;
  *
  * @author SR
  * @author FN
- * @version 0.3
+ * @version 1.0
  */
-public class GameScreen implements Screen {
+ class GameScreen implements Screen {
 
     private final RandomRhythm game;
     private OrthographicCamera camera;
@@ -45,8 +45,19 @@ public class GameScreen implements Screen {
     private long lastSpawnTime;
     // Score counter
     private int score;
+    // Counter of hit beats, this determines when game ends
+    private int corrects;
     private int difficulty;
     private long timeDifficulty;
+    // Game over when attempts reaches 0
+    private int attempts = 5;
+    // at this score, increase difficulty
+    private int rampDifficulty = 20;
+    // game won at this score
+    // should be more than twice ramp difficulty since it will feel fast
+    private int winScore = (int) (rampDifficulty * 4);
+    // stop animations
+    private boolean gameIsOver = false;
 
     GameScreen(RandomRhythm game, int difficulty, long timeDifficulty) {
         this.game = game;
@@ -84,42 +95,57 @@ public class GameScreen implements Screen {
     @Override
     public void render(float delta) {
 
-        // Background and (our stationary) camera
         renderScreen();
-        noteImage = new Texture(Gdx.files.internal("note.png"));
+        if (!gameIsOver) {
+            // Background and (our stationary) camera
+            noteImage = new Texture(Gdx.files.internal("note.png"));
 
-        // Handle batch for this game, which is every "saved thing" in the game.
-        game.batch.begin();
-        game.font.draw(game.batch, "Score: " + score, 0, Gdx.graphics.getHeight() - 30);
-        drawTargets();
-        // Beats
-        for (Column col : columns) col.drawBeats();
-        game.batch.end();
+            // check if we need to create a new note depending on the timeDifficulty
+            if (TimeUtils.nanoTime() - lastSpawnTime > timeDifficulty && corrects <= rampDifficulty) {
+                spawnBeats();
+            }
 
-        // check if we need to create a new note depending on the timeDifficulty
-        if (TimeUtils.nanoTime() - lastSpawnTime > timeDifficulty && score <= 50) {
-            spawnBeats();
+            // increase the number of spawned notes when your score is more than a given limit
+            if (corrects > rampDifficulty && TimeUtils.nanoTime() - lastSpawnTime > timeDifficulty / 2) {
+                spawnBeats();
+            }
+
+            // make the notes fall, remove any that are beneath the bottom edge of
+            // the screen or are pressed.
+            int scoreChange = 0;
+            int attemptsChange = 0;
+            for (Column col : columns) {
+                col.fall(difficulty);
+                attemptsChange += col.checkEndOfScreen();
+                scoreChange += col.checkInput();
+            }
+            // update statistics
+            score += scoreChange;
+            if (scoreChange > 0) corrects++;
+            attempts += attemptsChange;
         }
-
-        // increase the number of spawned notes when your score is more than 50
-        if (score > 50 && TimeUtils.nanoTime() - lastSpawnTime > timeDifficulty/2) {
-            spawnBeats();
-        }
-
-        // make the notes fall, remove any that are beneath the bottom edge of
-        // the screen or are pressed.
-        int scoreChange = 0;
-        for (Column col : columns) {
-            col.fall(difficulty);
-            col.checkEndOfScreen();
-            scoreChange += col.checkInput();
-        }
-        score += scoreChange;
-
         // Check escape press
-        if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
+        if (Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             game.setScreen(new MainMenuScreen(game));
         }
+        // Handle batch for this game, which is every "saved thing" in the game.
+        game.batch.begin();
+        // draw statistics
+        int scorePosition = 30;
+                game.font.draw(game.batch, "Score: " + score +
+                                "\nCorrect hits: " + corrects +
+                                "\nLives: " + attempts,
+                        0, Gdx.graphics.getHeight() - scorePosition);
+        if (!gameIsOver) {
+            drawTargets();
+            // Beats
+            for (Column col : columns) col.drawBeats();
+        }
+        // Game over
+        if (attempts <= 0) gameOver(false);
+        // Game win
+        else if (corrects >= winScore) gameOver(true);
+        game.batch.end();
     }
 
     /**
@@ -210,7 +236,7 @@ public class GameScreen implements Screen {
         // arguments to glClearColor are the red, green
         // blue and alpha component in the range [0,1]
         // of the color to be used to clear the screen.
-        Gdx.gl.glClearColor(0.5f, 0.9f, 0.9f, 1);
+        Gdx.gl.glClearColor(0.4f, 0.8f, 0.8f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // tell the camera to update its matrices.
@@ -226,5 +252,24 @@ public class GameScreen implements Screen {
      */
     private void drawTargets() {
         for (Column col : columns) col.drawTarget();
+    }
+
+    /**
+     * Handles a game over, either loss or win kind of over.
+     *
+     * @param beatTheGame affects end message.
+     */
+    private void gameOver(boolean beatTheGame) {
+        gameIsOver = true;
+        // message depending if you beat it or if you failed
+        String ending;
+        ending = beatTheGame ? "Stage Clear" : "Game Over";
+        // top of game over messages
+        int messageXPos = Gdx.graphics.getWidth() / 4;
+        int messageYPos = Gdx.graphics.getHeight() / 2;
+        game.font.draw(game.batch,
+                ending + "\nPress esc to return to main menu" +
+                "\nScore: " + score + " / " + winScore,
+                messageXPos, messageYPos);
     }
 }
