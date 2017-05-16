@@ -14,7 +14,8 @@ import java.util.LinkedList;
  * One column of falling beats and a target which corresponds to one given keyboard key.
  *
  * @author FN
- * @version 0.2
+ * @author SR
+ * @version 0.3
  */
 class Column {
 
@@ -86,6 +87,9 @@ class Column {
         // target area
         targetRec = new Rectangle(TXPos, TYPos, sizeNoteCImage.x, sizeNoteCImage.y);
     }
+
+    /** @return beats field */
+    LinkedList<Rectangle> getBeats() { return beats; }
 
     /**
      * Draw the boundaries of the target for beats.
@@ -185,13 +189,16 @@ class Column {
         while (beatIterator.hasNext()) {
             imgIterator.next();
             // next beat
-            if (beatIterator.next().y < -sizeNoteImage.y){
+            if (beatIterator.next().y < columnRec.y - sizeNoteImage.y){
                 beatIterator.remove();
                 imgIterator.remove();
             }
         }
     }
 
+    /**
+     * Dispose resources at closing of game instance.
+     */
     void dispose() {
         noteCImage.dispose();
         for (Texture noteimg : notesImages) {

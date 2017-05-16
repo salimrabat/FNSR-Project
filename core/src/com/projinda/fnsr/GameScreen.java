@@ -56,12 +56,12 @@ public class GameScreen implements Screen {
         // initialize objects in game
         initCamera();
         initColumns();
-
-        spawnNotes();
+        // spawn first beat and start timer for next beat
+        spawnBeats();
         score = 0;
     }
 
-    private void spawnNotes() {
+    private void spawnBeats() {
         // Choose a random column
         int i = MathUtils.random(n_COL - 1);
         columns[i].spawnBeat();
@@ -98,12 +98,12 @@ public class GameScreen implements Screen {
 
         // check if we need to create a new note depending on the timeDifficulty
         if (TimeUtils.nanoTime() - lastSpawnTime > timeDifficulty && score <= 50) {
-            spawnNotes();
+            spawnBeats();
         }
 
         // increase the number of spawned notes when your score is more than 50
         if (score > 50 && TimeUtils.nanoTime() - lastSpawnTime > timeDifficulty/2) {
-            spawnNotes();
+            spawnBeats();
         }
 
         // make the notes fall, remove any that are beneath the bottom edge of
@@ -116,6 +116,7 @@ public class GameScreen implements Screen {
         }
         score += scoreChange;
 
+        // Check escape press
         if(Gdx.input.isKeyPressed(Input.Keys.ESCAPE)) {
             game.setScreen(new MainMenuScreen(game));
         }
