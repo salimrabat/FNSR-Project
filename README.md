@@ -3,9 +3,11 @@
 
 ## What we are making
 
-The main purpose is to design a very simple yet somewhat appealing game. Our idea is to develop a one-player rhythm game. Despite the genre being called rhythm, we realize that music is an optional layer of complexity and it depends how much we manage to get done in time. Our MVP consists of randomly generated inputs, a feedback signal for each correct hit and an ending after either some set amount of time or number of misses, demonstrated by this rather quickly drawn [MVP image](https://github.com/salimrabat/FNSR-Project/wiki/Timing-Game-MVP).
+Game name: Random Rhythm.
 
-Expanding beyond this MVP, our initial ideas are to have different difficulty levels of choice, possibly more input buttons in case the game becomes too easy, and of course open-source music and graphics.
+The main purpose is to design a very simple yet somewhat appealing game. Our idea is to develop a rhythm game but with random beats instead of ready-made courses. Despite the genre being called rhythm, we realize that music is an optional layer of complexity and it depends how much we manage to get done in time. Our current game has randomly generated inputs, a feedback signal for each correct hit and a score counter. Screenshot: [Random Rhythm](https://github.com/salimrabat/FNSR-Project/wiki/Random-Rhythm-preview).
+
+Expanding beyond this, further ideas are to have open-source music and graphics and more special effects.
 
 ## How to play
 
@@ -16,3 +18,7 @@ Any possible further options are planned to be implemented within the user inter
 ## Frameworks
 
 We're using the LibGDX game engine, which uses a game library for Java LWJGL. Although it has a lot more than our project needs, it is one of the safer choices for Java game engines since it is well maintained and up-to-date.
+
+## Test strategy
+
+A simple division of test types for a game are what I choose to call scripted tests and manual tests. Scripted ones launch a different game instance using test-specific parameters which run themselves. Assertion is mostly made by visually looking at the visual outcome, but also, when feasible, assertion clauses are used for hardly visible methods. Manual tests is simply playing the game, looking for things which tests don't cover and for possible things missing in the game.
