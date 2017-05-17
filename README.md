@@ -9,7 +9,9 @@ Download and guide is at the git wiki: [How to start playing](https://github.com
 
 Game name: Random Rhythm.
 
-The main purpose is to design a very simple yet somewhat appealing game. Our idea is to develop a rhythm game but with random beats instead of ready-made courses. Despite the genre being called rhythm, we realize that music is an optional layer of complexity and it depends how much we manage to get done in time. Our current game has randomly generated inputs, a feedback signal for each correct hit and a score counter. Screenshot: [Random Rhythm](https://github.com/salimrabat/FNSR-Project/wiki/Random-Rhythm-preview).
+Why the name Random Rhythm? Our idea is to develop a rhythm game but unlike popular rhythm games, our beats are spawned on random columns. This is also a reason we have no music. It gets quite complicated if randomness should suit music.
+
+Our current game has randomly generated inputs, a feedback signal for each correct hit and a score counter. Screenshot: [Random Rhythm](https://github.com/salimrabat/FNSR-Project/wiki/Random-Rhythm-preview).
 
 It is thought that if this game is developed further, open-source music (of course), graphics and more special effects are on the board.
 
