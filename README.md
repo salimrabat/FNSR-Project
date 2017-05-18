@@ -23,6 +23,6 @@ We're using the LibGDX game engine, which uses a game library for Java LWJGL. Al
 
 ## Test strategy
 
-A simple division of test types for a game are what I choose to call scripted tests and manual tests. Scripted ones launch a different game instance using test-specific parameters which run themselves. Assertion is mostly made by visually looking at the visual outcome, but also, when feasible, assertion clauses are used for hardly visible methods. Manual tests is simply playing the game, looking for things which tests don't cover and for possible things missing in the game.
+A simple division of test types for a game are what I choose to call scripted tests and manual tests. Scripted ones launch a different game instance using test-specific parameters which run themselves. Assertion is mostly made by looking at the visual outcome, but also, when feasible, assertion clauses are used for hardly visible methods. Manual tests is simply playing the game, looking for things which tests don't cover and for possible things missing in the game.
 
 So far however, only the rhythms and falling animations are tested in a scripted way. So if more development is made, there should definitely be more scripted tests for the other things such as input, score count and main menu - game screen connections.
