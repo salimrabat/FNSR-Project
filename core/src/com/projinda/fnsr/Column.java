@@ -17,7 +17,7 @@ import java.util.LinkedList;
  * @author SR
  * @version 1.0
  */
-class Column {
+public class Column {
 
     // Game
     private RandomRhythm game;
@@ -56,7 +56,7 @@ class Column {
      * @param columnArea Rectangle representing the area which this column covers.
      * @param key keyboard button to press for target.
      */
-    Column(RandomRhythm gameScreen, Rectangle columnArea, int key) {
+    public Column(RandomRhythm gameScreen, Rectangle columnArea, int key) {
         game = gameScreen;
         columnRec = columnArea;
         clickKey = key;
@@ -89,19 +89,19 @@ class Column {
     }
 
     /** @return beats field */
-    LinkedList<Rectangle> getBeats() { return beats; }
+    public LinkedList<Rectangle> getBeats() { return beats; }
 
     /**
      * Draw the boundaries of the target for beats.
      */
-    void drawTarget() {
+    public void drawTarget() {
         game.batch.draw(noteCImage, TXPos, TYPos, sizeNoteCImage.x, sizeNoteCImage.y);
     }
 
     /**
      * Initiate a beat where it will start falling.
      */
-    void spawnBeat() {
+    public void spawnBeat() {
         // Contain a beat within a rectangle
         Rectangle note = new Rectangle();
         // Line up with target
@@ -121,7 +121,7 @@ class Column {
     /**
      * Draw all beats in column.
      */
-    void drawBeats() {
+    public void drawBeats() {
         for (int i = 0; i < beats.size(); i++) {
             game.batch.draw(notesImages.get(i), beats.get(i).x, beats.get(i).y);
         }
@@ -131,7 +131,7 @@ class Column {
      * Animate all beats falling by moving a constant distance down.
      * @param rate, increase for faster falling
      */
-    void fall(int rate) {
+    public void fall(int rate) {
         for (Rectangle beat : beats) {
             // 200 pixels per second
             beat.y -= rate * Gdx.graphics.getDeltaTime();
@@ -184,7 +184,7 @@ class Column {
      * Removes beats if they fall outside the visible screen.
      * @return -1 if some beat reaches end of screen, otherwise 0.
      */
-    int checkEndOfScreen() {
+    public int checkEndOfScreen() {
         int attemptChange = 0;
         beatIterator = beats.iterator();
         Iterator<Texture> imgIterator = notesImages.iterator();

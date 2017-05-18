@@ -1,4 +1,4 @@
-package com.projinda.fnsr.test_utils;
+package com.projinda.fnsr.tests.test_utils;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.InputAdapter;
