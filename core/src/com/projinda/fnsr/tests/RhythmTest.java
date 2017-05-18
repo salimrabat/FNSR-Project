@@ -1,6 +1,8 @@
-package com.projinda.fnsr;
+package com.projinda.fnsr.tests;
 
-import com.projinda.fnsr.test_utils.GdxTest;
+import com.projinda.fnsr.Column;
+import com.projinda.fnsr.RandomRhythm;
+import com.projinda.fnsr.tests.test_utils.GdxTest;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;

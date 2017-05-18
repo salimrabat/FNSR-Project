@@ -2,7 +2,7 @@ package com.projinda.fnsr.desktop;
 
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
-import com.projinda.fnsr.RhythmTest;
+import com.projinda.fnsr.tests.RhythmTest;
 
 /**
  * Test on drawing, canvas and tests on game Random Rhythm
