@@ -9,8 +9,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.TimeUtils;
 
-import static org.junit.Assert.*;
-
 /**
  * Test class for Column. If the game reaches exit
  * without thrown exception, the test passes.
@@ -153,10 +151,9 @@ public class RhythmTest extends GdxTest {
         int n_beats = fallCol.getBeats().size();
         if (all_beats) {
             // Cover for the case where a beat is just removed
-            assertTrue("either too few or too many beats",
-                    max_n_beats_falling >= n_beats && n_beats >= max_n_beats_falling - 1);
+            assert (max_n_beats_falling >= n_beats && n_beats >= max_n_beats_falling - 1);
         } else {
-            assertTrue("too many beats," + n_beats,n_beats < max_n_beats_falling);
+            assert (n_beats < max_n_beats_falling);
         }
     }
 }
