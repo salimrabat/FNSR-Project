@@ -5,7 +5,7 @@
 
 Download and guide is at the git wiki: [How to start playing](https://github.com/salimrabat/FNSR-Project/wiki/How-to-start-playing).
 
-This is a very simple rhythm-based game. Screenshot: [Random Rhythm](https://github.com/salimrabat/FNSR-Project/wiki/Random-Rhythm-preview). When notes reach the "target notes" on the bottom of the screen, hit A, S, D or F respectively. The game ends after a fixed number of notes are caught, or missed.
+Screenshot: [Random Rhythm](https://github.com/salimrabat/FNSR-Project/wiki/Random-Rhythm-preview). When notes reach the "target notes" on the bottom of the screen, hit A, S, D or F respectively. The game ends after a fixed number of notes are caught, or missed.
 
 ## What is this game?
 
