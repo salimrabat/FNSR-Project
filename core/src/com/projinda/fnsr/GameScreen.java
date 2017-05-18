@@ -9,9 +9,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.TimeUtils;
 
 /**
- * This class represents the logic of the game.
- * note.png is an image that has the shape of a musical note, these note will fall down at different times
- * and different speeds. We might have some music playing in the background.
+ * Main class of the game Random Rhythm.
+ * This is the game screen maker.
  *
  * @author SR
  * @author FN
