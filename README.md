@@ -3,7 +3,9 @@
 
 ## How to play
 
-Download and guide is at the git wiki: [How to start playing](https://github.com/salimrabat/FNSR-Project/wiki/How-to-start-playing)
+Download and guide is at the git wiki: [How to start playing](https://github.com/salimrabat/FNSR-Project/wiki/How-to-start-playing).
+
+This is a very simple rhythm-based game. Screenshot: [Random Rhythm](https://github.com/salimrabat/FNSR-Project/wiki/Random-Rhythm-preview). When notes reach the "target notes" on the bottom of the screen, hit A, S, D or F respectively. The game ends after a fixed number of notes are caught, or missed.
 
 ## What is this game?
 
@@ -11,7 +13,7 @@ Game name: Random Rhythm.
 
 Why the name Random Rhythm? Our idea is to develop a rhythm game but unlike popular rhythm games, our beats are spawned on random columns. This is also a reason we have no music. It gets quite complicated if randomness should suit music.
 
-Our current game has randomly generated inputs, a feedback signal for each correct hit and a score counter. Screenshot: [Random Rhythm](https://github.com/salimrabat/FNSR-Project/wiki/Random-Rhythm-preview).
+Our current game has randomly generated inputs, a feedback signal for each correct hit and a score counter.
 
 It is thought that if this game is developed further, open-source music (of course), graphics and more special effects are on the board.
 
