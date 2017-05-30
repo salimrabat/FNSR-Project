@@ -1,5 +1,4 @@
 # FNSR-Project Description
-(Frans Nyberg, Salim Rabat)
 
 ## How to play
 
